@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artlane Diaries – Crafting Emotions Through Art</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/index.css">
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="overlay" onclick="window.closeCart()"></div>
+<div class="cart-drawer" id="drawer">
+  <div class="cart-head">
+    <h3>Your Cart <span class="cart-badge-pill" id="cartBadge">0</span></h3>
+    <button class="cart-close-btn" onclick="window.closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  
+  <!-- CHECKOUT FORM -->
+  <div class="checkout-section flex-col-gap" id="checkoutSection" style="display:none;">
+    <h4>Delivery Details</h4>
+    <form id="checkoutForm" onsubmit="event.preventDefault()">
+      <input type="text" id="custName" class="checkout-input" placeholder="Full Name" required />
+      <input type="tel" id="custPhone" class="checkout-input" placeholder="Phone (WhatsApp)" required pattern="[0-9]{10}" />
+      <textarea id="custAddress" class="checkout-input" placeholder="Full Delivery Address" required rows="3"></textarea>
+    </form>
+  </div>
+
+  <div class="cart-footer" id="cartFooter" data-empty="true">
+    <div id="totalsSection">
+      <div class="cart-sum-row"><span>Subtotal</span><span id="cSub">₹0</span></div>
+      <div class="cart-sum-row"><span>Delivery</span><span>Free 🎁</span></div>
+      <div class="cart-total-row"><span>Total</span><span id="cTotal">₹0</span></div>
+    </div>
+    
+    <div class="trust-badges" id="trustBadges">
+      <span>🔒 <span class="bold">Secure Payment via UPI</span></span>
+      <span>⭐ Trusted by <span class="bold dynamic-customers">200+</span> happy customers</span>
+      <span style="font-size:0.65rem; margin-top:4px; opacity: 0.8">🛡️ 100% Refund if artwork is damaged in transit</span>
+    </div>
+
+    <button class="pay-upi-btn" id="btnProceedCheckout" onclick="window.proceedToCheckout()" disabled>Proceed to Checkout</button>
+
+    <div id="paymentOptions" style="display:none; flex-direction:column; gap:10px;">
+      <button class="pay-upi-btn" id="btnPayUPI" onclick="window.payWithUPI()">💳 Pay via UPI App</button>
+      <button class="pay-wp-btn" id="btnPayWP" onclick="window.payWithWhatsApp()">💬 WhatsApp & Pay</button>
+    </div>
+
+    <div class="order-confirm-box" id="orderConfirmInfo">
+      <h4>Order Placed!</h4>
+      <div class="order-id-badge" id="displayOrderId">ORD-XXXXXX</div>
+      <p style="font-size:0.75rem; color:var(--muted);">Status: <strong style="color:#e67e22;">Pending Payment</strong></p>
+      <p style="font-size:0.8rem; margin-top:5px; line-height:1.5;">
+        Please complete your payment using UPI.<br>
+        Share screenshot on <a href="https://wa.me/919500565091" target="_blank" style="color:var(--amber); font-weight:bold;">WhatsApp</a> to confirm!
+      </p>
+    </div>
+  </div>
+</div>
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-x" onclick="window.closeMob()">✕</button>
+  <a href="#divisions" onclick="window.closeMob()">Our Work</a>
+  <a href="#shop" onclick="window.closeMob()">Shop</a>
+  <a href="#custom" onclick="window.closeMob()">Custom Order</a>
+  <a href="#about" onclick="window.closeMob()">About</a>
+  <a href="#contact" onclick="window.closeMob()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">Artlane <span>Diaries</span></a>
+  <ul class="nav-links">
+    <li><a href="#divisions">Our Work</a></li>
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#custom">Custom Order</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-nav-btn" onclick="window.openCart()">
+      🛒 Cart <span class="cart-nav-count" id="navCount">0</span>
+    </button>
+    <button class="mob-btn" onclick="document.getElementById('mobMenu').classList.add('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grain"></div>
+  <div class="hero-blob" style="width:600px;height:600px;background:radial-gradient(circle,rgba(184,132,74,0.16),transparent 70%);top:-150px;right:-100px"></div>
+  <div class="hero-blob" style="width:380px;height:380px;background:radial-gradient(circle,rgba(110,148,112,0.1),transparent 70%);bottom:-80px;left:80px;animation-delay:-5s"></div>
+  <div class="hero-left">
+    <div class="hero-eyebrow">Where Memories Become Masterpieces</div>
+    <h1 class="hero-title">Artlane<br><em>Diaries</em></h1>
+    <p class="hero-sub">We craft emotions through art — handmade portraits, custom prints, polaroids & personalized gifts made with genuine love.</p>
+    <div class="hero-btns">
+      <a href="#shop" class="btn btn-w">🛍️ Shop Now</a>
+      <a href="#custom" class="btn btn-g">✏️ Custom Order</a>
+    </div>
+    <div class="hero-stats">
+      <div><span class="hstat-n">500+</span><span class="hstat-l">Artworks Made</span></div>
+      <div><span class="hstat-n dynamic-customers">200+</span><span class="hstat-l">Happy Clients</span></div>
+      <div><span class="hstat-n">100%</span><span class="hstat-l">Handmade</span></div>
+    </div>
+  </div>
+  <div class="hero-pills">
+    <a href="#divisions" class="hero-pill" style="animation-delay:0.5s">
+      <div class="pill-icon" style="background:rgba(184,132,74,0.14)">🎨</div>
+      <div><div class="pill-t">Hand-Drawn Art</div><div class="pill-s">Portraits · Sketches · Colour Art</div></div>
+    </a>
+    <a href="#printing" class="hero-pill" style="animation-delay:0.7s">
+      <div class="pill-icon" style="background:rgba(110,148,112,0.14)">🖼️</div>
+      <div><div class="pill-t">Prints & Gifts</div><div class="pill-s">Polaroids · Strips · Custom Gifts</div></div>
+    </a>
+    <a href="https://wa.me/919500565091" target="_blank" class="hero-pill" style="animation-delay:0.9s">
+      <div class="pill-icon" style="background:rgba(37,211,102,0.1)">💬</div>
+      <div><div class="pill-t">WhatsApp Us</div><div class="pill-s">+91 9500565091</div></div>
+    </a>
+  </div>
+</section>
+
+<!-- DIVISIONS -->
+<section id="divisions">
+  <div class="wrap">
+    <div data-aos="fade-up">
+      <div class="sec-eye">What We Do</div>
+      <h2 class="sec-h">Two <em>Worlds</em> of Art</h2>
+      <p class="sec-p">Whether you want something hand-drawn with soul or a printed keepsake to treasure — we've got you covered.</p>
+    </div>
+    <div class="div-grid" data-aos="fade-up" data-aos-delay="80">
+      <a href="#shop" class="div-card dark" id="drawing">
+        <div class="div-big-num">01</div>
+        <span class="div-pill">✏️ Hand-Drawn</span>
+        <div class="div-title">Art &<br>Portraits</div>
+        <p class="div-desc">Every line drawn by hand, every stroke with intention. Custom portraits, couple art, pet sketches — made just for you.</p>
+        <div class="div-chips">
+          <span class="div-chip">Pencil Portraits</span><span class="div-chip">Colour Art</span><span class="div-chip">Couple Sketches</span><span class="div-chip">Pet Portraits</span><span class="div-chip">Fan Art</span>
+        </div>
+        <span class="div-link">Shop Drawings →</span>
+      </a>
+      <a href="#shop" class="div-card light" id="printing">
+        <div class="div-big-num">02</div>
+        <span class="div-pill">🖼️ Print & Gift</span>
+        <div class="div-title">Prints &<br>Custom Gifts</div>
+        <p class="div-desc">Aesthetic polaroids, strip posters, photo collages and handcrafted gifts — modern keepsakes that feel timeless.</p>
+        <div class="div-chips">
+          <span class="div-chip">Polaroid Prints</span><span class="div-chip">Strip Posters</span><span class="div-chip">Photo Collage</span><span class="div-chip">Custom Gifts</span>
+        </div>
+        <span class="div-link">Shop Prints →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section id="shop">
+  <div class="wrap">
+    <div class="shop-top" data-aos="fade-up">
+      <div>
+        <div class="sec-eye">Shop</div>
+        <h2 class="sec-h">Browse & <em>Add to Cart</em></h2>
+        <p class="sec-p">Pick what you love and add to cart instantly. Custom upload below.</p>
+      </div>
+    </div>
+    <div class="filter-bar" data-aos="fade-up" data-aos-delay="60">
+      <button class="f-tab on" onclick="window.doFilter('all',this)">All</button>
+      <button class="f-tab" onclick="window.doFilter('art',this)">🎨 Drawings & Portraits</button>
+      <button class="f-tab" onclick="window.doFilter('print',this)">🖼️ Prints & Gifts</button>
+      <button class="f-tab" onclick="window.doFilter('popular',this)">⭐ Popular</button>
+    </div>
+    <div class="products" id="prodGrid"></div>
+  </div>
+</section>
+
+<!-- CUSTOM ORDER -->
+<section id="custom">
+  <div class="wrap">
+    <div class="custom-intro" data-aos="fade-up">
+      <div class="sec-eye">Upload & Order</div>
+      <h2 class="sec-h" style="text-align:center">Custom <em>Print Order</em></h2>
+      <p class="sec-p" style="margin:10px auto;text-align:center">Upload your photo, pick a size — we'll handle the rest.</p>
+    </div>
+    <div class="custom-panels" data-aos="fade-up" data-aos-delay="80">
+
+      <!-- ART PANEL -->
+      <div class="c-panel">
+        <div class="c-panel-head">
+          <div class="c-icon-box art-bg">🎨</div>
+          <div><h3>Drawing / Portrait</h3><p>Upload reference · we hand-draw it for you</p></div>
+        </div>
+        <div class="upload-zone" id="artZone" onclick="document.getElementById('artFile').click()"
+             ondragover="window.dOver(event,'artZone')" ondragleave="window.dLeave('artZone')" ondrop="window.dDrop(event,'art')">
+          <span class="uz-icon">📸</span>
+          <div class="uz-title">Drop your photo here</div>
+          <div class="uz-sub">or tap to browse · JPG, PNG</div>
+          <input type="file" id="artFile" accept=".jpg,.jpeg,.png" style="display:none" onchange="window.onFile(this,'art')">
+        </div>
+        <div class="preview-wrap" id="artPrev">
+          <img id="artPrevImg" src="" alt="">
+          <button class="prev-rm" onclick="window.rmFile('art')">✕</button>
+        </div>
+        <div class="size-head">Choose Size</div>
+        <div class="size-grid" id="artSizes">
+
+          <button class="size-btn" onclick="window.pickSz('art','A4',250,this)"><div class="s-check">✓</div><span class="s-name">A4</span><span class="s-dim">21×29.7cm</span><span class="s-price art-c">₹250</span></button>
+          <button class="size-btn" onclick="window.pickSz('art','A3',500,this)"><div class="s-check">✓</div><span class="s-name">A3</span><span class="s-dim">29.7x42.0cm</span><span class="s-price art-c">₹500</span></button>
+        </div>
+        <div class="mini-sum" id="artSum">
+          <div class="ms-row"><span>Service</span><span>Hand-Drawn Portrait</span></div>
+          <div class="ms-row"><span>Size</span><span id="artSz">—</span></div>
+          <div class="ms-row"><span>Total</span><span class="ms-price" id="artPrc">₹—</span></div>
+        </div>
+        <button class="main-cart-btn art-cart-btn" id="artAddBtn" onclick="window.addCustom('art')" disabled>🛒 Add to Cart</button>
+      </div>
+
+      <!-- PRINT PANEL -->
+      <div class="c-panel">
+        <div class="c-panel-head">
+          <div class="c-icon-box print-bg">🖼️</div>
+          <div><h3>Print / Polaroid / Gift</h3><p>Upload photo · choose size · done!</p></div>
+        </div>
+        <div class="upload-zone" id="printZone" onclick="document.getElementById('printFile').click()"
+             ondragover="window.dOver(event,'printZone')" ondragleave="window.dLeave('printZone')" ondrop="window.dDrop(event,'print')">
+          <span class="uz-icon">🖼️</span>
+          <div class="uz-title">Drop your photo here</div>
+          <div class="uz-sub">or tap to browse · JPG, PNG</div>
+          <input type="file" id="printFile" accept=".jpg,.jpeg,.png" style="display:none" onchange="window.onFile(this,'print')">
+        </div>
+        <div class="preview-wrap" id="printPrev">
+          <img id="printPrevImg" src="" alt="">
+          <button class="prev-rm" onclick="window.rmFile('print')">✕</button>
+        </div>
+        <div class="size-head">Choose Size</div>
+        <div class="size-grid" id="printSizes">
+          <button class="size-btn" onclick="window.pickSz('print','poloroid',10,this)"><div class="s-check">✓</div><span class="s-name">poloroid</span><span class="s-dim">5X7 cm </span><span class="s-price prnt-c">₹10</span></button>
+          <button class="size-btn" onclick="window.pickSz('print','A6',20,this)"><div class="s-check">✓</div><span class="s-name">A6</span><span class="s-dim">10.5×14.8cm</span><span class="s-price prnt-c">₹20</span></button>
+          <button class="size-btn" onclick="window.pickSz('print','A5',40,this)"><div class="s-check">✓</div><span class="s-name">A5</span><span class="s-dim">14.8×21cm</span><span class="s-price prnt-c">₹40</span></button>
+          <button class="size-btn" onclick="window.pickSz('print','A4',80,this)"><div class="s-check">✓</div><span class="s-name">A4</span><span class="s-dim">21×29.7cm</span><span class="s-price prnt-c">₹80</span></button>
+        </div>
+        <div class="mini-sum" id="printSum">
+          <div class="ms-row"><span>Service</span><span>Print / Polaroid</span></div>
+          <div class="ms-row"><span>Size</span><span id="printSz">—</span></div>
+          <div class="ms-row"><span>Total</span><span class="ms-price" id="printPrc">₹—</span></div>
+        </div>
+        <button class="main-cart-btn print-cart-btn" id="printAddBtn" onclick="window.addCustom('print')" disabled>🛒 Add to Cart</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div data-aos="fade-right">
+      <div class="about-img-wrapper" data-aos="zoom-in" data-aos-duration="1000">
+        <img src="/thank-you.png" alt="Thank You For Your Order" class="about-profile-pic" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/400x400/eeeeee/999999?text=Image+Missing';">
+        <div class="about-float">
+          <div class="af-n">♥</div>
+          <div class="af-t">Made with love</div>
+        </div>
+      </div>
+    </div>
+    <div data-aos="fade-left">
+      <div class="sec-eye">Our Story</div>
+      <h2 class="sec-h">Art that <em>feels</em><br>like home</h2>
+      <blockquote class="about-q">"I didn't start Artlane Diaries to sell art. I started it to share what I felt — one drawing at a time."</blockquote>
+      <p class="about-txt">Born from a deep love for handmade things, Artlane Diaries creates custom drawings, portraits and printed keepsakes that people treasure forever. Based in Chennai, everything we make is personal, intentional, and crafted with genuine care.</p>
+      <div class="about-stats">
+        <div><span class="as-n">500+</span><span class="as-l">Artworks</span></div>
+        <div><span class="as-n dynamic-customers">200+</span><span class="as-l">Clients</span></div>
+        <div><span class="as-n">100%</span><span class="as-l">Handmade</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="wrap">
+    <div class="testi-intro" data-aos="fade-up">
+      <div class="sec-eye">Reviews</div>
+      <h2 class="sec-h">What our <em>clients</em> say</h2>
+    </div>
+    <div class="testi-grid" data-aos="fade-up" data-aos-delay="80">
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-quote">"I gifted my best friend a portrait and she literally cried. The detail was incredible — it looked exactly like her. Absolutely worth every rupee."</p>
+        <div class="t-sep"></div>
+        <div class="t-name">Priya M.</div><div class="t-tag">Pencil Portrait · Chennai</div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-quote">"Ordered polaroid strips for my anniversary and they turned out SO beautiful! Very aesthetic, great quality printing. Packaging was also super cute."</p>
+        <div class="t-sep"></div>
+        <div class="t-name">Aadithya R.</div><div class="t-tag">Polaroid Prints · Bangalore</div>
+      </div>
+      <div class="t-card">
+        <div class="t-stars">★★★★★</div>
+        <p class="t-quote">"The photo collage I ordered for my mom's birthday made her so emotional. Amazing quality, perfectly packaged. Will definitely order again!"</p>
+        <div class="t-sep"></div>
+        <div class="t-name">Varshini T.</div><div class="t-tag">Photo Collage · Chennai</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div data-aos="fade-right">
+      <div class="sec-eye">Get in Touch</div>
+      <h2 class="contact-cta">Let's create something <em>beautiful</em> together</h2>
+      <p style="font-size:0.86rem;color:var(--muted);line-height:1.8">Have a custom idea? Reach out — we respond fast!</p>
+      <div class="contact-links">
+        <a href="https://www.instagram.com/artlane_diaries" target="_blank" class="c-link"><span class="c-link-icon">📸</span>@artlane_diaries on Instagram</a>
+        <a href="https://www.instagram.com/direct/t/17847258885599020/" target="_blank" class="c-link"><span class="c-link-icon">💌</span>Instagram DM (Fastest reply)</a>
+        <a href="https://wa.me/919500565091" target="_blank" class="c-link"><span class="c-link-icon">💬</span>WhatsApp · +91 9500565091</a>
+        <a href="mailto:artlanediaries@gmail.com" class="c-link"><span class="c-link-icon">✉️</span>artlanediaries@gmail.com</a>
+      </div>
+    </div>
+    <div data-aos="fade-left">
+      <div class="form-box">
+        <h3>Send a Message</h3>
+        <form onsubmit="window.submitForm(event)">
+          <div class="fr"><label>Name</label><input type="text" placeholder="Your name" required></div>
+          <div class="fr"><label>Email</label><input type="email" placeholder="your@email.com" required></div>
+          <div class="fr"><label>Message</label><textarea placeholder="Tell us what you'd like to create..." required></textarea></div>
+          <button type="submit" class="form-sub">Send Message →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <span class="f-logo">Artlane <span>Diaries</span></span>
+      <p class="f-tagline">Crafting emotions through art — one drawing, one print, one gift at a time. Based in Chennai.</p>
+      <div class="f-socials">
+        <a href="https://www.instagram.com/artlane_diaries" target="_blank" class="f-social">📸</a>
+        <a href="https://wa.me/919500565091" target="_blank" class="f-social">💬</a>
+        <a href="mailto:artlanediaries@gmail.com" class="f-social">✉️</a>
+        <a href="https://www.instagram.com/direct/t/17847258885599020/" target="_blank" class="f-social">💌</a>
+      </div>
+    </div>
+    <div class="f-col"><div class="f-col-t">Services</div><ul>
+      <li><a href="#shop">Pencil Portraits</a></li><li><a href="#shop">Colour Art</a></li>
+      <li><a href="#shop">Couple Sketches</a></li><li><a href="#shop">Polaroid Prints</a></li>
+      <li><a href="#shop">Strip Posters</a></li><li><a href="#shop">Custom Gifts</a></li>
+    </ul></div>
+    <div class="f-col"><div class="f-col-t">Navigate</div><ul>
+      <li><a href="#hero">Home</a></li><li><a href="#shop">Shop</a></li>
+      <li><a href="#custom">Custom Order</a></li><li><a href="#about">About</a></li>
+      <li><a href="#testimonials">Reviews</a></li><li><a href="#contact">Contact</a></li>
+    </ul></div>
+    <div class="f-col"><div class="f-col-t">Contact</div><ul>
+      <li><a href="mailto:artlanediaries@gmail.com">artlanediaries@gmail.com</a></li>
+      <li><a href="https://wa.me/919500565091" target="_blank">+91 9500565091</a></li>
+      <li><a href="https://www.instagram.com/artlane_diaries" target="_blank">@artlane_diaries</a></li>
+      <li><a style="color:rgba(255,255,255,0.15);cursor:default">Chennai, India</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bot">
+    <span class="f-copy">© 2025 Artlane Diaries. Made with ♥ in Chennai.</span>
+    <span class="f-copy">UPI: 9500565091@paytm</span>
+  </div>
+</footer>
+<button class="stb" id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+
