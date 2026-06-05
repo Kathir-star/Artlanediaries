@@ -10,6 +10,11 @@
 <body>
 <div class="toast" id="toast"></div>
 
+<!-- TOP ANNOUNCEMENT PROMO BANNER -->
+<div class="top-promo-banner">
+  <span>✨ RESTOCKED: Order today and unlock <strong>FREE Premium Shipping</strong> & <strong>10% Bulk Discount</strong> over 5 items! Only 3 custom slots left under review.</span>
+</div>
+
 <!-- CART DRAWER -->
 <div class="cart-overlay" id="overlay" onclick="window.closeCart()"></div>
 <div class="cart-drawer" id="drawer">
@@ -17,49 +22,102 @@
     <h3>Your Cart <span class="cart-badge-pill" id="cartBadge">0</span></h3>
     <button class="cart-close-btn" onclick="window.closeCart()">✕</button>
   </div>
-  <div class="cart-body" id="cartBody"></div>
   
-  <!-- CHECKOUT FORM -->
-  <div class="checkout-section flex-col-gap" id="checkoutSection" style="display:none;">
-    <h4>Delivery Details</h4>
-    <form id="checkoutForm" onsubmit="event.preventDefault()">
-      <input type="text" id="custName" class="checkout-input" placeholder="Full Name" required />
-      <input type="tel" id="custPhone" class="checkout-input" placeholder="Phone (WhatsApp)" required pattern="[0-9]{10}" />
-      <textarea id="custAddress" class="checkout-input" placeholder="Full Delivery Address" required rows="3"></textarea>
-    </form>
+  <!-- Steps bar -->
+  <div class="drawer-steps-bar">
+    <div class="drawer-step active" id="ds1"><span>1</span> Cart</div>
+    <div class="drawer-step-line"></div>
+    <div class="drawer-step" id="ds2"><span>2</span> Details</div>
+    <div class="drawer-step-line"></div>
+    <div class="drawer-step" id="ds3"><span>3</span> Pay</div>
+    <div class="drawer-step-line"></div>
+    <div class="drawer-step" id="ds4"><span>4</span> Done</div>
+  </div>
+
+  <!-- Step 1 Pane: Cart Body list -->
+  <div id="cartItemsSection" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column;">
+    <div class="cart-body" id="cartBody" style="flex: none; overflow: visible; padding-bottom: 0;"></div>
+    
+    <!-- Saved for Later section -->
+    <div id="savedSection" style="padding: 18px 26px 26px 26px; border-top: 2px dashed var(--beige); margin-top: auto; background: #faf8f5;">
+      <h4 style="font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--ink); margin: 0 0 16px 0; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span>💾 Saved for Later</span>
+          <span class="cart-badge-pill" id="savedBadge" style="background:var(--warm); color:var(--ink); font-size:0.72rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;">0</span>
+        </div>
+        <button id="btnClearSavedArr" onclick="window.clearSavedWithConfirm()" style="background:none; border:none; color:#c0392b; font-size:0.75rem; font-weight:700; cursor:pointer; text-decoration:underline; font-family:var(--font-sans); display:flex; align-items:center; gap:4px; padding:4px 8px; border-radius:4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(192, 57, 43, 0.08)'" onmouseout="this.style.background='none'">
+          🗑️ Clear Saved
+        </button>
+      </h4>
+      <div id="savedBody" style="display:flex; flex-direction:column; gap:14px;"></div>
+    </div>
+  </div>
+
+  <!-- Step 2 Pane: Delivery Details -->
+  <div id="detailsSection" style="display:none; padding:18px 26px; overflow-y:auto; flex:1;">
+    <div class="compact-order-summary" id="compactOrderSummary"></div>
+    
+    <div class="checkout-section flex-col-gap" id="checkoutSection" style="background:#f7f3ee; border:1px solid var(--beige); border-radius:var(--rs); padding:20px; margin: 18px 0 0 0;">
+      <h4 style="font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--ink); margin-bottom:12px;">Delivery Information</h4>
+      <form id="checkoutForm" onsubmit="event.preventDefault()" style="display:flex; flex-direction:column; gap:4px;">
+        <div style="font-size:0.68rem; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:4px; letter-spacing:0.04em;">Your Full Name</div>
+        <input type="text" id="custName" class="checkout-input" placeholder="e.g. Priya Sharma" required style="background:#fff; border:1px solid var(--beige);" />
+        
+        <div style="font-size:0.68rem; font-weight:700; color:var(--muted); text-transform:uppercase; margin:8px 0 4px; letter-spacing:0.04em;">Phone (WhatsApp for Preview Support)</div>
+        <input type="tel" id="custPhone" class="checkout-input" placeholder="10 Digits WhatsApp number" required pattern="[0-9]{10}" style="background:#fff; border:1px solid var(--beige);" />
+        
+        <div style="font-size:0.68rem; font-weight:700; color:var(--muted); text-transform:uppercase; margin:8px 0 4px; letter-spacing:0.04em;">Full Delivery Address</div>
+        <textarea id="custAddress" class="checkout-input" placeholder="House/Flat No, Street, Landmark, City, State, Pincode" required rows="3" style="background:#fff; border:1px solid var(--beige); font-family:inherit;"></textarea>
+      </form>
+    </div>
+  </div>
+
+  <!-- Step 3 Pane: Payment Mode -->
+  <div id="paySection" style="display:none; padding:18px 26px; overflow-y:auto; flex:1;">
+    <div class="payment-overview" id="paymentOverview"></div>
+    <p style="font-size: 0.74rem; line-height:1.6; color: var(--muted); margin-bottom: 20px;">
+      ✨ <strong>100% Trust Guarantee:</strong> Fill your specs with us first! After verifying your custom dimensions & photo crop alignment on WhatsApp, our artist support team will generate a secure payment link or UPI code directly in the WhatsApp chat to authorize!
+    </p>
   </div>
 
   <div class="cart-footer" id="cartFooter" data-empty="true">
     <div id="totalsSection">
+      <!-- Generated dynamically in rendering loop -->
       <div class="cart-sum-row"><span>Subtotal</span><span id="cSub">₹0</span></div>
       <div class="cart-sum-row"><span>Delivery</span><span>Free 🎁</span></div>
       <div class="cart-total-row"><span>Total</span><span id="cTotal">₹0</span></div>
     </div>
     
-    <div class="trust-badges" id="trustBadges">
-      <span>🔒 <span class="bold">Secure Payment via UPI</span></span>
-      <span>⭐ Trusted by <span class="bold dynamic-customers">200+</span> happy customers</span>
-      <span style="font-size:0.65rem; margin-top:4px; opacity: 0.8">🛡️ 100% Refund if artwork is damaged in transit</span>
+    <div class="trust-badges" id="trustBadges" style="margin-top: 10px;">
+      <span>🔒 <span class="bold">100% Secure Payment via UPI</span></span>
+      <span>⭐ Trusted by <span class="bold dynamic-customers">200+</span> Chennai & India Clients</span>
+      <span style="font-size:0.65rem; opacity: 0.85">🛡️ 100% Free replacement casing if damaged in transit</span>
     </div>
 
-    <button class="pay-upi-btn" id="btnProceedCheckout" onclick="window.proceedToCheckout()" disabled>Proceed to Checkout</button>
+    <!-- Active Single CTA button used for Navigation Steps 1 & 2 -->
+    <button class="pay-upi-btn" id="btnProceedCheckout" onclick="window.proceedToCheckout()" disabled style="background:var(--ink); height: 50px;">Proceed to Details →</button>
 
+    <!-- Payment Option Buttons used in Step 3 -->
     <div id="paymentOptions" style="display:none; flex-direction:column; gap:10px;">
       <button class="pay-upi-btn" id="btnPayUPI" onclick="window.payWithUPI()">💳 Pay via UPI App</button>
-      <button class="pay-wp-btn" id="btnPayWP" onclick="window.payWithWhatsApp()">💬 WhatsApp & Pay</button>
+      <button class="pay-wp-btn" id="btnPayWP" onclick="window.payWithWhatsApp()">💬 Send Order on WhatsApp & Pay</button>
+      <button class="pay-back-btn" onclick="window.goToStep(2)" style="background:none; border:1.5px solid var(--beige); color:var(--muted); padding:10px; border-radius:var(--rs); font-size:0.75rem; font-weight:700; cursor:pointer;">← Edit Delivery Info</button>
     </div>
 
+    <!-- Step 4 Receipt Panel: Order Completed! -->
     <div class="order-confirm-box" id="orderConfirmInfo">
-      <h4>Order Placed!</h4>
+      <h4>Order Register Complete! 🎉</h4>
       <div class="order-id-badge" id="displayOrderId">ORD-XXXXXX</div>
-      <p style="font-size:0.75rem; color:var(--muted);">Status: <strong style="color:#e67e22;">Pending Payment</strong></p>
-      <p style="font-size:0.8rem; margin-top:5px; line-height:1.5;">
-        Please complete your payment using UPI.<br>
-        Share screenshot on <a href="https://wa.me/919500565091" target="_blank" style="color:var(--amber); font-weight:bold;">WhatsApp</a> to confirm!
+      <p style="font-size:0.75rem; color:var(--muted);">Status: <strong style="color:var(--print);">✓ Registered (Awaiting Verification)</strong></p>
+      <p style="font-size:0.8rem; margin:8px 0; line-height:1.5;">
+        Your order is safe with us! We have opened WhatsApp to confirm your crop/composition specifications.<br><br>
+        <strong>Next Step:</strong> Review & verify image alignments with our support artist, then complete payment using the custom link we text you on WhatsApp!
       </p>
+      <button class="pay-wp-btn" onclick="window.closeCartAndClear()" style="background:var(--print); margin-top:12px;">✓ Perfect, Back to Shop</button>
     </div>
   </div>
 </div>
+
 <!-- MOBILE MENU -->
 <div class="mob-menu" id="mobMenu">
   <button class="mob-x" onclick="window.closeMob()">✕</button>
@@ -68,6 +126,7 @@
   <a href="#custom" onclick="window.closeMob()">Custom Order</a>
   <a href="#about" onclick="window.closeMob()">About</a>
   <a href="#contact" onclick="window.closeMob()">Contact</a>
+  <a href="https://www.instagram.com/artlane_diaries" target="_blank" onclick="window.closeMob()" style="color:#e1306c; font-weight:700;">📷 Instagram</a>
 </div>
 
 <!-- NAV -->
@@ -79,6 +138,7 @@
     <li><a href="#custom">Custom Order</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li><a href="https://www.instagram.com/artlane_diaries" target="_blank" style="color:#e1306c; font-weight:700; display:flex; align-items:center; gap:4px;">📷 Instagram</a></li>
   </ul>
   <div class="nav-right">
     <button class="cart-nav-btn" onclick="window.openCart()">
@@ -91,170 +151,530 @@
 </nav>
 
 <!-- HERO -->
+<div class="page1-segment">
 <section id="hero">
   <div class="hero-grain"></div>
   <div class="hero-blob" style="width:600px;height:600px;background:radial-gradient(circle,rgba(184,132,74,0.16),transparent 70%);top:-150px;right:-100px"></div>
   <div class="hero-blob" style="width:380px;height:380px;background:radial-gradient(circle,rgba(110,148,112,0.1),transparent 70%);bottom:-80px;left:80px;animation-delay:-5s"></div>
+  
   <div class="hero-left">
-    <div class="hero-eyebrow">Where Memories Become Masterpieces</div>
-    <h1 class="hero-title">Artlane<br><em>Diaries</em></h1>
-    <p class="hero-sub">We craft emotions through art — handmade portraits, custom prints, polaroids & personalized gifts made with genuine love.</p>
-    <div class="hero-btns">
-      <a href="#shop" class="btn btn-w">🛍️ Shop Now</a>
-      <a href="#custom" class="btn btn-g">✏️ Custom Order</a>
+    <div class="hero-eyebrow" data-aos="fade-down">✨ Turn moments into memories</div>
+    <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">Turn Your Photos<br>into <em>Timeless Art</em></h1>
+    <p class="hero-sub" data-aos="fade-up" data-aos-delay="200">Handcrafted portraits, custom prints & aesthetic gifts — made just for you.</p>
+    <div class="hero-btns" data-aos="fade-up" data-aos-delay="300" style="margin-bottom: 30px;">
+      <a href="#start-creating" class="btn btn-w">🎨 Start Creating</a>
+      <a href="#shop" class="btn btn-g">🖼️ Browse Collection</a>
     </div>
-    <div class="hero-stats">
+    <div class="hero-stats" data-aos="fade-up" data-aos-delay="450">
       <div><span class="hstat-n">500+</span><span class="hstat-l">Artworks Made</span></div>
       <div><span class="hstat-n dynamic-customers">200+</span><span class="hstat-l">Happy Clients</span></div>
       <div><span class="hstat-n">100%</span><span class="hstat-l">Handmade</span></div>
     </div>
   </div>
-  <div class="hero-pills">
-    <a href="#divisions" class="hero-pill" style="animation-delay:0.5s">
-      <div class="pill-icon" style="background:rgba(184,132,74,0.14)">🎨</div>
-      <div><div class="pill-t">Hand-Drawn Art</div><div class="pill-s">Portraits · Sketches · Colour Art</div></div>
-    </a>
-    <a href="#printing" class="hero-pill" style="animation-delay:0.7s">
-      <div class="pill-icon" style="background:rgba(110,148,112,0.14)">🖼️</div>
-      <div><div class="pill-t">Prints & Gifts</div><div class="pill-s">Polaroids · Strips · Custom Gifts</div></div>
-    </a>
-    <a href="https://wa.me/919500565091" target="_blank" class="hero-pill" style="animation-delay:0.9s">
-      <div class="pill-icon" style="background:rgba(37,211,102,0.1)">💬</div>
-      <div><div class="pill-t">WhatsApp Us</div><div class="pill-s">+91 9500565091</div></div>
-    </a>
-  </div>
-</section>
 
-<!-- DIVISIONS -->
-<section id="divisions">
-  <div class="wrap">
-    <div data-aos="fade-up">
-      <div class="sec-eye">What We Do</div>
-      <h2 class="sec-h">Two <em>Worlds</em> of Art</h2>
-      <p class="sec-p">Whether you want something hand-drawn with soul or a printed keepsake to treasure — we've got you covered.</p>
+  <div class="hero-showcase" data-aos="fade-left" data-aos-delay="200">
+    <div class="hero-showcase-frame">
+      <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=600" alt="Beautiful Custom Frame Art" class="showcase-img-main" referrerpolicy="no-referrer" />
+      <div class="showcase-tag">🎨 Chennai Art Studio</div>
     </div>
-    <div class="div-grid" data-aos="fade-up" data-aos-delay="80">
-      <a href="#shop" class="div-card dark" id="drawing">
-        <div class="div-big-num">01</div>
-        <span class="div-pill">✏️ Hand-Drawn</span>
-        <div class="div-title">Art &<br>Portraits</div>
-        <p class="div-desc">Every line drawn by hand, every stroke with intention. Custom portraits, couple art, pet sketches — made just for you.</p>
-        <div class="div-chips">
-          <span class="div-chip">Pencil Portraits</span><span class="div-chip">Colour Art</span><span class="div-chip">Couple Sketches</span><span class="div-chip">Pet Portraits</span><span class="div-chip">Fan Art</span>
-        </div>
-        <span class="div-link">Shop Drawings →</span>
-      </a>
-      <a href="#shop" class="div-card light" id="printing">
-        <div class="div-big-num">02</div>
-        <span class="div-pill">🖼️ Print & Gift</span>
-        <div class="div-title">Prints &<br>Custom Gifts</div>
-        <p class="div-desc">Aesthetic polaroids, strip posters, photo collages and handcrafted gifts — modern keepsakes that feel timeless.</p>
-        <div class="div-chips">
-          <span class="div-chip">Polaroid Prints</span><span class="div-chip">Strip Posters</span><span class="div-chip">Photo Collage</span><span class="div-chip">Custom Gifts</span>
-        </div>
-        <span class="div-link">Shop Prints →</span>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- SHOP -->
-<section id="shop">
-  <div class="wrap">
-    <div class="shop-top" data-aos="fade-up">
+    <div class="hero-showcase-badge">
+      <div class="badge-icon">💖</div>
       <div>
-        <div class="sec-eye">Shop</div>
-        <h2 class="sec-h">Browse & <em>Add to Cart</em></h2>
-        <p class="sec-p">Pick what you love and add to cart instantly. Custom upload below.</p>
+        <div class="badge-title">A gift they'll never forget</div>
+        <div class="badge-sub">Hand-drawn with love and care</div>
       </div>
     </div>
-    <div class="filter-bar" data-aos="fade-up" data-aos-delay="60">
-      <button class="f-tab on" onclick="window.doFilter('all',this)">All</button>
-      <button class="f-tab" onclick="window.doFilter('art',this)">🎨 Drawings & Portraits</button>
-      <button class="f-tab" onclick="window.doFilter('print',this)">🖼️ Prints & Gifts</button>
-      <button class="f-tab" onclick="window.doFilter('popular',this)">⭐ Popular</button>
-    </div>
-    <div class="products" id="prodGrid"></div>
-  </div>
-</section>
-
-<!-- CUSTOM ORDER -->
-<section id="custom">
-  <div class="wrap">
-    <div class="custom-intro" data-aos="fade-up">
-      <div class="sec-eye">Upload & Order</div>
-      <h2 class="sec-h" style="text-align:center">Custom <em>Print Order</em></h2>
-      <p class="sec-p" style="margin:10px auto;text-align:center">Upload your photo, pick a size — we'll handle the rest.</p>
-    </div>
-    <div class="custom-panels" data-aos="fade-up" data-aos-delay="80">
-
-      <!-- ART PANEL -->
-      <div class="c-panel">
-        <div class="c-panel-head">
-          <div class="c-icon-box art-bg">🎨</div>
-          <div><h3>Drawing / Portrait</h3><p>Upload reference · we hand-draw it for you</p></div>
-        </div>
-        <div class="upload-zone" id="artZone" onclick="document.getElementById('artFile').click()"
-             ondragover="window.dOver(event,'artZone')" ondragleave="window.dLeave('artZone')" ondrop="window.dDrop(event,'art')">
-          <span class="uz-icon">📸</span>
-          <div class="uz-title">Drop your photo here</div>
-          <div class="uz-sub">or tap to browse · JPG, PNG</div>
-          <input type="file" id="artFile" accept=".jpg,.jpeg,.png" style="display:none" onchange="window.onFile(this,'art')">
-        </div>
-        <div class="preview-wrap" id="artPrev">
-          <img id="artPrevImg" src="" alt="">
-          <button class="prev-rm" onclick="window.rmFile('art')">✕</button>
-        </div>
-        <div class="size-head">Choose Size</div>
-        <div class="size-grid" id="artSizes">
-
-          <button class="size-btn" onclick="window.pickSz('art','A4',250,this)"><div class="s-check">✓</div><span class="s-name">A4</span><span class="s-dim">21×29.7cm</span><span class="s-price art-c">₹250</span></button>
-          <button class="size-btn" onclick="window.pickSz('art','A3',500,this)"><div class="s-check">✓</div><span class="s-name">A3</span><span class="s-dim">29.7x42.0cm</span><span class="s-price art-c">₹500</span></button>
-        </div>
-        <div class="mini-sum" id="artSum">
-          <div class="ms-row"><span>Service</span><span>Hand-Drawn Portrait</span></div>
-          <div class="ms-row"><span>Size</span><span id="artSz">—</span></div>
-          <div class="ms-row"><span>Total</span><span class="ms-price" id="artPrc">₹—</span></div>
-        </div>
-        <button class="main-cart-btn art-cart-btn" id="artAddBtn" onclick="window.addCustom('art')" disabled>🛒 Add to Cart</button>
-      </div>
-
-      <!-- PRINT PANEL -->
-      <div class="c-panel">
-        <div class="c-panel-head">
-          <div class="c-icon-box print-bg">🖼️</div>
-          <div><h3>Print / Polaroid / Gift</h3><p>Upload photo · choose size · done!</p></div>
-        </div>
-        <div class="upload-zone" id="printZone" onclick="document.getElementById('printFile').click()"
-             ondragover="window.dOver(event,'printZone')" ondragleave="window.dLeave('printZone')" ondrop="window.dDrop(event,'print')">
-          <span class="uz-icon">🖼️</span>
-          <div class="uz-title">Drop your photo here</div>
-          <div class="uz-sub">or tap to browse · JPG, PNG</div>
-          <input type="file" id="printFile" accept=".jpg,.jpeg,.png" style="display:none" onchange="window.onFile(this,'print')">
-        </div>
-        <div class="preview-wrap" id="printPrev">
-          <img id="printPrevImg" src="" alt="">
-          <button class="prev-rm" onclick="window.rmFile('print')">✕</button>
-        </div>
-        <div class="size-head">Choose Size</div>
-        <div class="size-grid" id="printSizes">
-          <button class="size-btn" onclick="window.pickSz('print','poloroid',10,this)"><div class="s-check">✓</div><span class="s-name">poloroid</span><span class="s-dim">5X7 cm </span><span class="s-price prnt-c">₹10</span></button>
-          <button class="size-btn" onclick="window.pickSz('print','A6',20,this)"><div class="s-check">✓</div><span class="s-name">A6</span><span class="s-dim">10.5×14.8cm</span><span class="s-price prnt-c">₹20</span></button>
-          <button class="size-btn" onclick="window.pickSz('print','A5',40,this)"><div class="s-check">✓</div><span class="s-name">A5</span><span class="s-dim">14.8×21cm</span><span class="s-price prnt-c">₹40</span></button>
-          <button class="size-btn" onclick="window.pickSz('print','A4',80,this)"><div class="s-check">✓</div><span class="s-name">A4</span><span class="s-dim">21×29.7cm</span><span class="s-price prnt-c">₹80</span></button>
-        </div>
-        <div class="mini-sum" id="printSum">
-          <div class="ms-row"><span>Service</span><span>Print / Polaroid</span></div>
-          <div class="ms-row"><span>Size</span><span id="printSz">—</span></div>
-          <div class="ms-row"><span>Total</span><span class="ms-price" id="printPrc">₹—</span></div>
-        </div>
-        <button class="main-cart-btn print-cart-btn" id="printAddBtn" onclick="window.addCustom('print')" disabled>🛒 Add to Cart</button>
-      </div>
-
+    <div class="hero-showcase-polaroid">
+      <img src="https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&q=80&w=200" alt="Retro Polaroid Kept Close" class="showcase-img-polaroid" referrerpolicy="no-referrer" />
+      <span class="polaroid-handwrite">Moments to cherish</span>
     </div>
   </div>
 </section>
 
+<!-- TRUST STRIP -->
+<section id="trust" style="background: #ffffff; padding: 22px 20px; border-bottom: 1.5px solid var(--beige); text-align: center;" data-aos="fade-down">
+  <div class="wrap" style="max-width: 1200px; display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center; gap: 20px;">
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--ink);">
+      <span style="font-size: 1.25rem;">⭐</span>
+      <span>500+ Happy Customers</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--ink);">
+      <span style="font-size: 1.25rem;">🚚</span>
+      <span>Fast Express Delivery</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--ink);">
+      <span style="font-size: 1.25rem;">🎨</span>
+      <span>Handmade with Care</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--ink);">
+      <span style="font-size: 1.25rem; color: #25d366;">💬</span>
+      <span>WhatsApp Artist Support</span>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP (PREMIUM PRODUCTS GRID) -->
+<section id="shop" style="padding: 85px 20px; background: #faf8f5; border-bottom: 1px solid var(--beige);">
+  <div class="wrap" style="max-width: 1200px; margin:0 auto;">
+    
+    <div style="text-align: center; margin-bottom: 45px;" data-aos="fade-up">
+      <div class="sec-eye" style="text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.12em; font-weight: 700; color: var(--muted); margin-bottom: 8px;">Shop</div>
+      <h2 class="sec-h" style="font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: var(--ink); margin-bottom: 8px;">Browse Our <em>Collection</em></h2>
+      <p class="sec-p" style="font-size: 0.95rem; color: var(--muted); max-width: 620px; margin: 0 auto; line-height: 1.5;">Browse & Explore · Pick what you love and continue to customize.</p>
+      
+      <!-- Restorating Category Tabs -->
+      <div class="filter-bar" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 24px;">
+        <button class="f-tab on" onclick="window.doFilter('all', this)">All</button>
+        <button class="f-tab" onclick="window.doFilter('art', this)">🎨 Drawings & Portraits</button>
+        <button class="f-tab" onclick="window.doFilter('print', this)">🖼️ Prints & Gifts</button>
+        <button class="f-tab" onclick="window.doFilter('popular', this)">⭐ Popular</button>
+      </div>
+    </div>
+
+    <!-- MAIN GRID CONTAINER -->
+    <div id="prodGrid" class="products">
+      <!-- Renders dynamically with renderProds() in main.ts -->
+    </div>
+
+  </div>
+</section>
+
+<!-- START CREATING CUSTOM ART SECTION (PREMIUM ADD-ON) -->
+<section id="start-creating" class="design-your-own-section" data-aos="fade-up">
+  <div class="wrap" style="max-width: 1400px; margin: 0 auto; text-align: center; padding: 0 10px;">
+    
+    <!-- Header styled exactly like the provided screenshot -->
+    <div style="text-align: center; margin-bottom: 45px; position: relative;">
+      <h2 style="font-family: 'Space Grotesk', 'DM Sans', sans-serif; font-size: 2.85rem; font-weight: 800; color: #111111; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; position: relative; margin: 0; line-height: 1.1;">
+        <span style="position: relative; display: inline-block;">
+          D<span style="position: absolute; width: 100%; height: 3px; background: var(--amber); left: 0; top: 48%; transform: rotate(-25deg); pointer-events: none; border-radius: 1px;"></span>
+        </span>ESIGN YOUR OW<span style="position: relative; display: inline-block;">
+          N<span style="position: absolute; width: 100%; height: 3px; background: var(--amber); left: 0; top: 48%; transform: rotate(-25deg); pointer-events: none; border-radius: 1px;"></span>
+        </span>
+      </h2>
+      <div style="font-family: 'DM Sans', sans-serif; font-size: 0.72rem; letter-spacing: 0.82em; text-transform: uppercase; color: var(--amber); font-weight: 700; margin-top: 5px; transform: translateX(0.41em);">
+        PRINTS
+      </div>
+    </div>
+
+    <!-- PREVIEW CARDS GRID with 6 beautiful custom product slides -->
+    <div class="design-your-own-container">
+      
+      <!-- Card 1: Custom Poster -->
+      <div class="design-your-own-card" onclick="window.clickPremiumCard('poster')">
+        <div style="position: relative; overflow: hidden; aspect-ratio: 1.1; background: #faf8f5;">
+          <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=600" alt="Custom Poster" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+        <div class="dyo-info">
+          <div>
+            <div class="dyo-meta">Classic Poster</div>
+            <h3 class="dyo-card-title">Custom Poster</h3>
+            <p class="dyo-card-desc">High-resolution matte texture finish options with clean anti-fade properties.</p>
+          </div>
+          <div class="dyo-card-footer">
+            <span class="dyo-card-badge">🎨 Art Grade</span>
+            <span class="dyo-card-link">Get Yours &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Custom Split Poster -->
+      <div class="design-your-own-card" onclick="window.clickPremiumCard('split')">
+        <div style="position: relative; overflow: hidden; aspect-ratio: 1.1; background: #faf8f5;">
+          <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=600" alt="Custom Split Poster" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+        <div class="dyo-info">
+          <div>
+            <div class="dyo-meta">Split Assembly</div>
+            <h3 class="dyo-card-title">3-Piece Split Poster</h3>
+            <p class="dyo-card-desc">Adjacent landscape triptych collage panels to make an impressive statement.</p>
+          </div>
+          <div class="dyo-card-footer">
+            <span class="dyo-card-badge">🖼️ 3 Panels</span>
+            <span class="dyo-card-link">Get Yours &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Custom Split Poster 2x2 -->
+      <div class="design-your-own-card" onclick="window.clickPremiumCard('split2x2')">
+        <div style="position: relative; overflow: hidden; aspect-ratio: 1.1; background: #faf8f5;">
+          <img src="https://images.unsplash.com/photo-1543857778-c4a1a3e0b2eb?auto=format&fit=crop&q=80&w=600" alt="Custom Split 2x2" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+        <div class="dyo-info">
+          <div>
+            <div class="dyo-meta">Collage Format</div>
+            <h3 class="dyo-card-title">Quad Grid Collage</h3>
+            <p class="dyo-card-desc">Perfect symmetrical quadrant grids for storytelling, weddings, and milestones.</p>
+          </div>
+          <div class="dyo-card-footer">
+            <span class="dyo-card-badge">✨ 4 Quadrants</span>
+            <span class="dyo-card-link">Get Yours &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Custom Retro Prints -->
+      <div class="design-your-own-card" onclick="window.clickPremiumCard('retro')">
+        <div style="position: relative; overflow: hidden; aspect-ratio: 1.1; background: #faf8f5;">
+          <img src="https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&q=80&w=600" alt="Custom Retro Prints" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+        <div class="dyo-info">
+          <div>
+            <div class="dyo-meta">Vintage Slides</div>
+            <h3 class="dyo-card-title">Retro Polaroid Prints</h3>
+            <p class="dyo-card-desc">Vintage square prints. Includes solid wood peg hangers and fairy string lights.</p>
+          </div>
+          <div class="dyo-card-footer">
+            <span class="dyo-card-badge">🏮 Free String Lights</span>
+            <span class="dyo-card-link">Get Yours &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5: Custom Mini Pocket Photo -->
+      <div class="design-your-own-card" onclick="window.clickPremiumCard('mini')">
+        <div style="position: relative; overflow: hidden; aspect-ratio: 1.1; background: #faf8f5;">
+          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=600" alt="Custom Mini Pocket" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+        <div class="dyo-info">
+          <div>
+            <div class="dyo-meta">Mini Card Segments</div>
+            <h3 class="dyo-card-title">Mini Pocket Prints</h3>
+            <p class="dyo-card-desc">Perfect pocket-friendly prints designed to fit transparent smartphone backings.</p>
+          </div>
+          <div class="dyo-card-footer">
+            <span class="dyo-card-badge">📱 Casing Prints</span>
+            <span class="dyo-card-link">Get Yours &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 6: Custom Photobooth Strip -->
+      <div class="design-your-own-card" onclick="window.clickPremiumCard('photobooth')">
+        <div style="position: relative; overflow: hidden; aspect-ratio: 1.1; background: #faf8f5;">
+          <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600" alt="Custom Photobooth Strip" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+        </div>
+        <div class="dyo-info">
+          <div>
+            <div class="dyo-meta">Photo Strips</div>
+            <h3 class="dyo-card-title">Photobooth Strip Row</h3>
+            <p class="dyo-card-desc">Symmetrical columns of sequential snapshots ideal for personal scrapbooking.</p>
+          </div>
+          <div class="dyo-card-footer">
+            <span class="dyo-card-badge">🎞️ Strip Row</span>
+            <span class="dyo-card-link">Get Yours &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" style="padding: 85px 20px; background: #faf8f5; border-top: 1px solid var(--beige); border-bottom: 1px solid var(--beige);" data-aos="fade-up">
+  <div class="wrap" style="max-width: 1000px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 50px;">
+      <div class="sec-eye" style="text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; font-weight: 700; color: var(--muted); margin-bottom: 6px;">Seamless Process</div>
+      <h2 class="sec-h" style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--ink); text-align: center;">How It <em>Works</em></h2>
+      <p class="sec-p" style="font-size: 0.95rem; color: var(--muted); max-width: 500px; margin: 8px auto 0; text-align: center;">From your favorite photos to masterclass art delivered safely in three simple steps.</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;" class="how-grid">
+      <!-- Step 1 -->
+      <div style="background: #fff; border: 1px solid var(--beige); border-radius: var(--rs); padding: 30px 24px; position: relative; text-align: center; box-shadow: var(--shadow-sm); transition: transform 0.3s ease;">
+        <div style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); background: var(--amber); color: #fff; font-weight: 700; font-size: 0.85rem; padding: 2px 14px; border-radius: 20px; text-transform: uppercase; border: 2px solid #fff;">Step 1</div>
+        <div style="font-size: 2.5rem; margin: 15px 0 10px 0;">📸</div>
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--ink); margin-bottom: 8px;">Upload Your Photo</h3>
+        <p style="font-size: 0.82rem; color: var(--muted); line-height: 1.6;">Pick up to 10 photos directly on our product catalog or custom upload panel. Add size choices & custom text note specs.</p>
+      </div>
+
+      <!-- Step 2 -->
+      <div style="background: #fff; border: 1px solid var(--beige); border-radius: var(--rs); padding: 30px 24px; position: relative; text-align: center; box-shadow: var(--shadow-sm); transition: transform 0.3s ease;">
+        <div style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); background: var(--amber); color: #fff; font-weight: 700; font-size: 0.85rem; padding: 2px 14px; border-radius: 20px; text-transform: uppercase; border: 2px solid #fff;">Step 2</div>
+        <div style="font-size: 2.5rem; margin: 15px 0 10px 0;">🎨</div>
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--ink); margin-bottom: 8px;">We Create Your Art</h3>
+        <p style="font-size: 0.82rem; color: var(--muted); line-height: 1.6;">Our dedicated Chennai artists meticulously handdraw details, or fine-tune high resolution filters for prime results.</p>
+      </div>
+
+      <!-- Step 3 -->
+      <div style="background: #fff; border: 1px solid var(--beige); border-radius: var(--rs); padding: 30px 24px; position: relative; text-align: center; box-shadow: var(--shadow-sm); transition: transform 0.3s ease;">
+        <div style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); background: var(--amber); color: #fff; font-weight: 700; font-size: 0.85rem; padding: 2px 14px; border-radius: 20px; text-transform: uppercase; border: 2px solid #fff;">Step 3</div>
+        <div style="font-size: 2.5rem; margin: 15px 0 10px 0;">🏡</div>
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--ink); margin-bottom: 8px;">Delivered to Your Door</h3>
+        <p style="font-size: 0.82rem; color: var(--muted); line-height: 1.6;">Within 3–5 business days, your bubble-wrapped beautiful portrait is securely delivered to your doorstep in India.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- CUSTOMER FAVORITES (FEATURED PRODUCTS) -->
+<section id="curated-favorites" style="padding: 85px 20px; background: #faf8f5; border-top: 1px solid var(--beige); border-bottom: 1px solid var(--beige);" data-aos="fade-up">
+  <div class="wrap" style="max-width: 1200px; margin: 0 auto;">
+    
+    <div style="text-align: center; margin-bottom: 45px;">
+      <div style="font-family: 'DM Sans', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; color: var(--amber); margin-bottom: 8px;">Curated Bestsellers</div>
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 2.3rem; font-weight: 700; color: var(--ink); margin: 0;">Our Customer <em>Favorites</em></h2>
+      <p style="font-size: 0.95rem; color: var(--muted); max-width: 500px; margin: 8px auto 0;">The most gifted and highly-rated customized artworks this season.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;" class="curated-grid">
+      
+      <!-- Card 1 -->
+      <div class="p-card fav-card" onclick="window.clickPremiumCard('poster')" style="cursor: pointer; background: #fff; border: 1.5px solid var(--beige); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.35s ease;">
+        <div style="position: relative; overflow: hidden; aspect-ratio: 1.1;">
+          <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=400" alt="Pencil Portrait Bestseller" style="width: 100%; height: 100%; object-fit: cover;" referrerpolicy="no-referrer" />
+          <span style="position: absolute; top: 12px; left: 12px; background: var(--amber); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;">🔥 Top Loved</span>
+        </div>
+        <div style="padding: 24px; display: flex; flex-direction: column; flex: 1;">
+          <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); margin-bottom: 6px;">Handcrafted Portrait</span>
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--ink); margin: 0 0 10px 0;">Pencil Sketch Portrait</h3>
+          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.5; margin-bottom: 20px; flex: 1;">A masterfully-textured grayscale portrait hand-drawn from your reference photo. Pure nostalgia and warm artistry.</p>
+          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(184,132,74,0.06); padding-top: 15px;">
+            <span style="font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--amber);">from ₹129+</span>
+            <span style="font-size: 0.72rem; font-weight: 700; color: var(--ink);">Customize Now &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="p-card fav-card" onclick="window.clickPremiumCard('retro')" style="cursor: pointer; background: #fff; border: 1.5px solid var(--beige); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.35s ease;">
+        <div style="position: relative; overflow: hidden; aspect-ratio: 1.1;">
+          <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=400" alt="Polaroids Bestseller" style="width: 100%; height: 100%; object-fit: cover;" referrerpolicy="no-referrer" />
+          <span style="position: absolute; top: 12px; left: 12px; background: var(--amber); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;">💡 Perfect Gift</span>
+        </div>
+        <div style="padding: 24px; display: flex; flex-direction: column; flex: 1;">
+          <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); margin-bottom: 6px;">Prints & Decor</span>
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--ink); margin: 0 0 10px 0;">Retro Polaroid Set</h3>
+          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.5; margin-bottom: 20px; flex: 1;">Spacious vintage printed square cards. Set includes cozy warm fairy string lights and wooden clothespins to hang.</p>
+          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(184,132,74,0.06); padding-top: 15px;">
+            <span style="font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--amber);">from ₹149+</span>
+            <span style="font-size: 0.72rem; font-weight: 700; color: var(--ink);">Customize Now &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="p-card fav-card" onclick="window.clickPremiumCard('split')" style="cursor: pointer; background: #fff; border: 1.5px solid var(--beige); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.35s ease;">
+        <div style="position: relative; overflow: hidden; aspect-ratio: 1.1;">
+          <img src="https://images.unsplash.com/photo-1544207240-8f1015480d52?auto=format&fit=crop&q=80&w=400" alt="Split Poster Bestseller" style="width: 100%; height: 100%; object-fit: cover;" referrerpolicy="no-referrer" />
+          <span style="position: absolute; top: 12px; left: 12px; background: var(--amber); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;">🖼️ Luxury Look</span>
+        </div>
+        <div style="padding: 24px; display: flex; flex-direction: column; flex: 1;">
+          <span style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); margin-bottom: 6px;">Premium Multi Panel</span>
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--ink); margin: 0 0 10px 0;">3-Piece Split Canvas</h3>
+          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.5; margin-bottom: 20px; flex: 1;">Breathtaking split layouts spanning adjacent landscape panels for an incredible modern gallery wall statement.</p>
+          <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(184,132,74,0.06); padding-top: 15px;">
+            <span style="font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--amber);">from ₹299+</span>
+            <span style="font-size: 0.72rem; font-weight: 700; color: var(--ink);">Customize Now &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+</div><!-- End page1-segment -->
+
+<!-- INTERACTIVE DEDICATED PREVIEW CUSTOMZER STUDIO VIEW -->
+<div id="page2_preview" style="display: none; opacity: 0; transition: opacity 0.35s ease-in-out;">
+<section id="premiumCustomizerSection" style="padding: 70px 20px; background: #ffffff; border-top:1px solid var(--beige);">
+  <div class="wrap" style="max-width: 1200px; margin:0 auto;">
+    
+    <!-- SUBTLE FLOATING ALERT TRIGGER OR NOTIFICATION FOR PREMIUM DESIGNS (CONVERSION BOOSTERS) -->
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; background:#faf8f5; border:1px solid var(--beige); padding:10px 16px; border-radius:10px; margin-bottom:30px; gap:10px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="animation: bounce 1.8s infinite; display:inline-block; font-size:1rem;">🔥</span>
+        <span style="font-size:0.78rem; font-weight:700; color:var(--ink);">Only 5 designer verification slots left today!</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; font-size:0.78rem; font-weight:500;">
+        <span style="color:var(--print); font-weight:700;">● Flat ₹500 OFF On Bulk Packages</span>
+        <span style="color:var(--muted);">|</span>
+        <span style="color:var(--amber); font-weight:700;">⚡ Shipped from Chennai Metro Area</span>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN WORKSPACE GRID -->
+    <div class="p-workspace-columns-grid">
+      
+      <!-- LEFT FOOTER/COLUMN: PREVIEW DISPLAY BOX & ROTATING SPEC SLIDES -->
+      <div class="p-workspace-left-col">
+        
+        <!-- BACK TO PRODUCTS BUTTON -->
+        <div style="margin-bottom: 20px;">
+          <button onclick="window.showPage(1)" style="background: none; border: 1.5px solid var(--beige); color: var(--ink); border-radius: 30px; padding: 10px 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; box-shadow: var(--s1); font-family: 'DM Sans', sans-serif;">
+            ← Back to Products
+          </button>
+        </div>
+
+        <!-- BREADCRUMB -->
+        <div id="pBreadcrumb" style="font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:12px;">
+          Home &gt; Custom Prints &gt; <span style="color:var(--amber); font-weight:700;">Custom Poster</span>
+        </div>
+
+        <!-- REALISTIC CANVAS PREVIEW BOX WITH FRAMING MOCKUP CONTAINER -->
+        <div class="realistic-framer-wrapper">
+          <div class="framer-bezel"></div>
+          <div class="framer-canvas-shadow" id="mockupContainer">
+            <!-- Dynamic markup code is rendered here by javascript based on product choice and file selection -->
+          </div>
+        </div>
+
+        <!-- ROTATING PRESTIGE METRICS IMAGES & SELECTABLE OPTIONS -->
+        <div style="margin-top:20px;">
+          <div style="font-size:0.72rem; color:var(--muted); font-weight:700; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.04em;">Available Print Formats</div>
+          <div style="display:flex; gap:10px; overflow-x:auto; padding-bottom:6px;">
+            <button class="vertical-thumb-item selected-thumb" id="vthumb_poster" onclick="window.selectPremiumProduct('poster')">
+              <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=200" alt="Poster Format" />
+              <span>Poster</span>
+            </button>
+            <button class="vertical-thumb-item" id="vthumb_split" onclick="window.selectPremiumProduct('split')">
+              <img src="https://images.unsplash.com/photo-1544207240-8f1015480d52?auto=format&fit=crop&q=80&w=200" alt="Split Format" />
+              <span>3-Split</span>
+            </button>
+            <button class="vertical-thumb-item" id="vthumb_split2x2" onclick="window.selectPremiumProduct('split2x2')">
+              <img src="https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&q=80&w=200" alt="2x2 Split" />
+              <span>Quad Grid</span>
+            </button>
+            <button class="vertical-thumb-item" id="vthumb_retro" onclick="window.selectPremiumProduct('retro')">
+              <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200" alt="Retro Format" />
+              <span>Retro</span>
+            </button>
+            <button class="vertical-thumb-item" id="vthumb_mini" onclick="window.selectPremiumProduct('mini')">
+              <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=200" alt="Mini Format" />
+              <span>Pocket Case</span>
+            </button>
+            <button class="vertical-thumb-item" id="vthumb_photobooth" onclick="window.selectPremiumProduct('photobooth')">
+              <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=200" alt="Photobooth Format" />
+              <span>Photobooth</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- LIVE DESIGN ASSISTANT NOTIFICATION BANNER -->
+        <div style="background: rgba(196,168,130,0.04); border:1px solid var(--beige); border-radius:var(--rs); padding:12px; margin-top:16px; display:flex; gap:10px; align-items:center;">
+          <span style="font-size:1.4rem;">👩‍🎨</span>
+          <div style="font-size:0.75rem; color:var(--muted); line-height:1.4;">
+            <strong style="color:var(--ink);">Design Consultant Active</strong> · Upload files using the panel on the right. Our support team verifies and crops your images perfectly to order before printing!
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN: PRODUCT META, MULTIPLE PHOTO UPLOADER & SUMMARY -->
+      <div class="p-workspace-right-col">
+        
+        <!-- PRODUCT TITLE & PRICES -->
+        <h1 id="pTitle" style="font-family:'Playfair Display', serif; font-size:1.85rem; font-weight:700; color:var(--ink); line-height:1.2;">Custom Poster</h1>
+        <div style="display:flex; align-items:center; gap:8px; margin:6px 0 14px 0;">
+          <span style="font-size:0.75rem; color:var(--muted); text-decoration:line-through;" id="pOrigPrice">₹179</span>
+          <strong style="font-family:'Playfair Display', serif; font-size:1.4rem; color:var(--amber);" id="pActivePrice">₹129</strong>
+          <span class="custom-secure-badge">✓ Secure Checkout</span>
+          <span style="background:rgba(110,148,112,0.1); color:var(--print); font-size:0.6rem; padding:2px 6px; border-radius:4px; font-weight:700;">Save 30% Today</span>
+        </div>
+
+        <!-- SHORT DESCRIPTION -->
+        <p id="pDesc" style="font-size:0.82rem; color:var(--muted); line-height:1.5; margin-bottom:20px;">
+          Classic high-resolution aesthetic canvas prints with crisp edge finishes and anti-fade protection. Perfect for bedrooms, offices, living spaces, or study desks.
+        </p>
+
+        <!-- SIZING CONTAINER -->
+        <div style="margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink);">Select Size</span>
+            <button onclick="window.toggleSizeGuideModal(true)" style="background:none; border:none; text-decoration:underline; font-size:0.75rem; color:var(--amber); font-weight:700; cursor:pointer;" title="View sizes measurements table">📐 Size Guide Table</button>
+          </div>
+          <div class="p-sizes-selection-grid" id="pSizesGrid">
+            <!-- Rendered dynamically by javascript -->
+          </div>
+        </div>
+
+        <!-- MULTIPLE IMAGE UPLOAD FIELD -->
+        <div style="margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink);">Attach Photos (Up to 10 photos)</span>
+            <span style="font-size:0.68rem; color:var(--muted);">Multiple files selections permitted</span>
+          </div>
+          
+          <div class="premium-drag-zone" onclick="document.getElementById('premiumFileInput').click()" style="padding:22px 15px; border:2px dashed var(--warm); border-radius:var(--rs); text-align:center; cursor:pointer; background:rgba(196,168,130,0.01); transition:all 0.3s ease;">
+            <span style="font-size:1.8rem; display:block; margin-bottom:6px;">📸</span>
+            <div style="font-size:0.8rem; font-weight:700; color:var(--ink);">Click to select & upload image file(s)</div>
+            <p style="font-size:0.68rem; color:var(--muted); margin-top:2px;">Select up to 10 photos · Real-time mockup generates instantly!</p>
+            <input type="file" id="premiumFileInput" accept=".jpg,.jpeg,.png" style="display:none;" multiple onchange="window.onPremiumFiles(this)" />
+          </div>
+
+          <div style="margin-top: 8px; font-size: 0.68rem; color: var(--muted); display: flex; align-items: center; gap: 4px;">
+            <span>ℹ️</span> <strong>First image will be used for preview</strong>
+          </div>
+
+          <!-- DYNAMIC CHIPS STACK OF UPLOADED THUMBNAILS -->
+          <div style="margin-top:10px;">
+            <p id="pZoneEmptyMsg" style="font-size:0.7rem; color:var(--muted); font-style:italic;">No custom memory attachments uploaded yet. Setup preview to start order.</p>
+            <div class="uploaded-files-chips-row" id="premiumThumbsRow" style="display:none; gap:10px; overflow-x:auto; padding-bottom:6px; margin-top:4px;">
+              <!-- Dynamic preview thumbnail list -->
+            </div>
+          </div>
+        </div>
+
+        <!-- QUANTITY ADJUSTMENTS SEGMENT -->
+        <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--beige); border-bottom:1px solid var(--beige); padding:12px 0; margin-bottom:20px;">
+          <div>
+            <span style="font-weight:700; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink); display:block;">Select Quantity</span>
+            <span style="font-size:0.65rem; color:var(--muted);">Adjust bulk order series copy units</span>
+          </div>
+          <div class="premium-quantity-stepper">
+            <button onclick="window.changePremiumQty(-1)">-</button>
+            <span id="premiumQtyVal" style="font-family:'Playfair Display', serif; font-weight:700; font-size:1rem; min-width:24px; text-align:center; color:var(--ink);">1</span>
+            <button onclick="window.changePremiumQty(1)">+</button>
+          </div>
+        </div>
+
+        <!-- DYNAMIC SUMMARY PANEL WRAPPER -->
+        <div class="premium-calculated-box shadow-sm" id="premiumSummaryBox" style="background:#faf8f5; border:1px solid var(--beige); border-radius:var(--rs); padding:16px; margin-bottom:22px;">
+          <!-- Live summary calculated via JS -->
+        </div>
+
+        <!-- ACTION CONCISE CALL-TO-ACTIONS -->
+        <div class="action-workstation-buttons">
+          <button class="customizer-action-btn primary" id="pAddToCartBtn" onclick="window.submitPremiumOrderToCart()" disabled>
+            🛒 Add Custom Design to Cart
+          </button>
+          
+          <button class="customizer-action-btn secondary" id="pOrderWABtn" onclick="window.submitPremiumOrderToWhatsApp()" disabled>
+            💬 Instant Checkout Via WhatsApp
+          </button>
+        </div>
+
+        <p id="pDesignNotifyMsg" style="font-size:0.68rem; color:var(--muted); text-align:center; margin-top:10px;">
+          Select size and upload clear reference files to compile your preview.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+</div><!-- End page2_preview -->
+
+<!-- MOBILE STICKY ORDER BUTTON BAR -->
+<div id="stickyMobileBar" class="sticky-mobile-bar shadow-2xl">
+  <div style="display:flex; flex-direction:column; gap:1px;">
+    <div style="font-size:0.7rem; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.04em; opacity:0.9;">🎨 Memory Studio</div>
+    <div style="font-size:0.62rem; color:rgba(255,255,255,0.75);">Save 15% automatic on bulk orders</div>
+  </div>
+  <button onclick="window.scrollToCustomizer()" class="sticky-order-now-btn">
+    Customize Now ➜
+  </button>
+</div>
+
+<div class="page1-segment">
 <!-- ABOUT -->
 <section id="about">
   <div class="about-grid">
@@ -281,6 +701,151 @@
   </div>
 </section>
 
+<!-- ARTIST BRAND PROFILE IMAGE -->
+<section id="artist-brand-profile" style="padding: 60px 20px 20px; text-align: center; background: var(--bg);" data-aos="fade-up">
+  <div class="wrap" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;">
+    <div style="position: relative; max-width: 250px; width: 100%;">
+      <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=600" 
+           alt="Artlane Diaries Studio" 
+           style="width: 100%; border-radius: 50%; aspect-ratio: 1/1; object-fit: cover; border: 4px solid var(--beige); box-shadow: 0 10px 25px rgba(0,0,0,0.06); transition: transform 0.3s ease;"
+           class="artist-accent-img"
+           referrerpolicy="no-referrer" />
+      <div style="position: absolute; bottom: 8px; right: 20px; background: var(--amber); color: #fff; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: var(--shadow-sm);">👩‍🎨</div>
+    </div>
+    <span style="font-family: 'Playfair Display', serif; font-size: 0.95rem; font-style: italic; color: var(--muted); margin-top: 8px;">Bringing your beautiful moments to canvas and lifetime prints.</span>
+  </div>
+</section>
+
+<!-- ORDER FROM INSTAGRAM CTA & TIMELINE -->
+<section id="funnel-extras" style="background: #faf8f5; border-top: 1px solid var(--beige); border-bottom: 1px solid var(--beige); padding: 80px 20px;">
+  <div class="wrap" style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 60px;">
+    
+    <!-- Instagram CTA Banner -->
+    <div style="background: linear-gradient(135deg, #fff5f6, #fffbf7); border: 1.5px solid rgba(225,48,108,0.12); border-radius: var(--r); padding: 40px; display: flex; align-items: center; justify-content: space-between; gap: 30px; box-shadow: var(--shadow-sm); flex-wrap: wrap;" data-aos="fade-up">
+      <div style="flex: 1; min-width: 280px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+          <span style="font-size: 1.8rem;">📸</span>
+          <span style="font-family:'DM Sans',sans-serif; text-transform:uppercase; font-size:0.7rem; font-weight:700; color:#e1306c; letter-spacing:0.12em;">Instagram Seamless Funnel</span>
+        </div>
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: var(--ink); margin: 0 0 10px 0;">Prefer to Order Directly on Instagram?</h3>
+        <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin: 0;">
+          No problem! You can send us your reference photographs directly on Instagram GM. Our artist support team coordinates all image cropping, custom greeting text modifications, and registers your payment instantly!
+        </p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-start;">
+        <a href="https://www.instagram.com/direct/t/17847258885599020/" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #e1306c; color: #fff; text-decoration: none; padding: 13px 28px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; transition: all 0.25s; box-shadow: 0 4px 15px rgba(225,48,108,0.25); white-space: nowrap;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(225,48,108,0.45)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(225,48,108,0.25)'">
+          💬 Chat & Order on Instagram
+        </a>
+        <a href="https://www.instagram.com/artlane_diaries" target="_blank" style="font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-left: 14px; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='#e1306c'" onmouseout="this.style.color='var(--muted)'">View Our Feed @artlane_diaries</a>
+      </div>
+    </div>
+
+    <!-- Delivery Timeline -->
+    <div data-aos="fade-up">
+      <div style="text-align: center; margin-bottom: 40px;">
+        <div class="sec-eye" style="justify-content: center;">Order Journey</div>
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--ink); margin: 6px 0 0 0;">Our Transparent <em>Delivery Timeline</em></h3>
+        <p style="font-size: 0.88rem; color: var(--muted); max-width: 550px; margin: 8px auto 0; line-height: 1.7;">From your favorite photos to masterclass art delivered safely with zero guesswork. Here is exactly what happens next:</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; position: relative;">
+        <!-- Card 1 -->
+        <div style="background: #fff; border: 1.5px solid var(--beige); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: var(--shadow-sm);">
+          <div style="width: 32px; height: 32px; background: var(--warm); color: var(--ink); font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">1</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);">Day 0: Checkout</div>
+          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0;">Upload your files, pick sizes, and submit checkout details. Redirects to WhatsApp instantly to confirm specs.</p>
+          <span style="font-size: 0.72rem; font-weight: 700; color: var(--print); background: rgba(110,148,112,0.1); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">Auto-initiated</span>
+        </div>
+        <!-- Card 2 -->
+        <div style="background: #fff; border: 1.5px solid var(--beige); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: var(--shadow-sm);">
+          <div style="width: 32px; height: 32px; background: var(--amber); color: #fff; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">2</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);">Day 1: Photo Review</div>
+          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0;">Our studio reviews selected references, adjusts composition borders, and confirms background request parameters.</p>
+          <span style="font-size: 0.72rem; font-weight: 700; color: #e67e22; background: rgba(230,126,34,0.1); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">Consultation chat</span>
+        </div>
+        <!-- Card 3 -->
+        <div style="background: #fff; border: 1.5px solid var(--beige); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: var(--shadow-sm);">
+          <div style="width: 32px; height: 32px; background: var(--print); color: #fff; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">3</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);">Day 2-3: Work draft</div>
+          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0;">Our artists meticulous draw outlines or apply aesthetic filter setups, and send a digital preview draft on WhatsApp for approval.</p>
+          <span style="font-size: 0.72rem; font-weight: 700; color: var(--print); background: rgba(110,148,112,0.1); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">100% Free Edits</span>
+        </div>
+        <!-- Card 4 -->
+        <div style="background: #fff; border: 1.5px solid var(--beige); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: var(--shadow-sm);">
+          <div style="width: 32px; height: 32px; background: var(--ink); color: #fff; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">4</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);">Day 4-5: Casing Delivery</div>
+          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0;">Artwork is bound in double-padded premium transit frames, safely dispatched and delivered right to your home.</p>
+          <span style="font-size: 0.72rem; font-weight: 700; color: #9b59b6; background: rgba(155,89,182,0.1); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">Free Express Delivery</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ SECTION -->
+<section id="faq" class="faq-section" data-aos="fade-up">
+  <div class="faq-container">
+    <div style="text-align: center; margin-bottom: 50px;">
+      <div class="sec-eye" style="justify-content: center; display: inline-flex;">Common Questions</div>
+      <h2 class="sec-h" style="text-align: center; font-family:'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--ink);">Frequently Asked <em>Queries</em></h2>
+      <p class="sec-p" style="margin: 8px auto 0; text-align: center; max-width: 500px; color: var(--muted); font-size: 0.95rem;">Everything you need to know about photo guidelines, shipping options, and secure payment setups.</p>
+    </div>
+
+    <!-- FAQ Item 1 -->
+    <div class="faq-item" onclick="window.toggleFaqItem(this)">
+      <div class="faq-summary">
+        <span>📸 Does my reference photo need to be professional quality?</span>
+        <div class="faq-icon-box">＋</div>
+      </div>
+      <div class="faq-content-wrapper">
+        <div class="faq-content">
+          Not at all! Standard phone snapshots, casual selfies, or group photos work perfectly. Our artists analyze details with extreme care. We can even merge characters from separate individual photos into a single, beautifully unified composition portrait! Just ensure that facial features are clearly visible under decent lighting so we can render them accurately.
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Item 2 -->
+    <div class="faq-item" onclick="window.toggleFaqItem(this)">
+      <div class="faq-summary">
+        <span>🚀 What are your shipping timelines and framing options?</span>
+        <div class="faq-icon-box">＋</div>
+      </div>
+      <div class="faq-content-wrapper">
+        <div class="faq-content">
+          We offer <strong>Free Express Delivery</strong> across India! Standard orders take 3 to 5 business days from your final draft confirmation on WhatsApp to reach your doorstep. Every portrait is printed on art-grade archives, housed inside shock-proof premium frames, and wrapped in thick luxury bubble protection to guarantee zero transit damage.
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Item 3 -->
+    <div class="faq-item" onclick="window.toggleFaqItem(this)">
+      <div class="faq-summary">
+        <span>🛡️ How secure is the payment flow? Do I pay upfront?</span>
+        <div class="faq-icon-box">＋</div>
+      </div>
+      <div class="faq-content-wrapper">
+        <div class="faq-content">
+          Your confidence is our priority! You do <strong>not</strong> have to complete payment before photo verification. You select sizes and upload references first; then our studio artist contacts you on WhatsApp to configure alignment. Once you give 100% approval on the digital proof sketch, we drop an encrypted, highly secure payment interface link or UPI QR code in the chat.
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Item 4 -->
+    <div class="faq-item" onclick="window.toggleFaqItem(this)">
+      <div class="faq-summary">
+        <span>✍️ Can I add customized lines, dates, or messages to the design?</span>
+        <div class="faq-icon-box">＋</div>
+      </div>
+      <div class="faq-content-wrapper">
+        <div class="faq-content">
+          Absolutely! Personalizing your art makes it unforgettable. You can specify names, custom dates, or a emotional message/quote during product selection or reference upload. If you forget, simply let our support artist know during your WhatsApp consultation, and we will artistically position your text onto the final composition free of charge!
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- TESTIMONIALS -->
 <section id="testimonials">
   <div class="wrap">
@@ -290,22 +855,40 @@
     </div>
     <div class="testi-grid" data-aos="fade-up" data-aos-delay="80">
       <div class="t-card">
-        <div class="t-stars">★★★★★</div>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120" alt="Priya M." style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid var(--beige);" referrerpolicy="no-referrer" />
+          <div>
+            <div class="t-stars">★★★★★</div>
+            <div class="t-name" style="margin:0; font-size:0.95rem;">Priya M.</div>
+          </div>
+        </div>
         <p class="t-quote">"I gifted my best friend a portrait and she literally cried. The detail was incredible — it looked exactly like her. Absolutely worth every rupee."</p>
         <div class="t-sep"></div>
-        <div class="t-name">Priya M.</div><div class="t-tag">Pencil Portrait · Chennai</div>
+        <div class="t-tag">Pencil Portrait · Chennai</div>
       </div>
       <div class="t-card">
-        <div class="t-stars">★★★★★</div>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120" alt="Aadithya R." style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid var(--beige);" referrerpolicy="no-referrer" />
+          <div>
+            <div class="t-stars">★★★★★</div>
+            <div class="t-name" style="margin:0; font-size:0.95rem;">Aadithya R.</div>
+          </div>
+        </div>
         <p class="t-quote">"Ordered polaroid strips for my anniversary and they turned out SO beautiful! Very aesthetic, great quality printing. Packaging was also super cute."</p>
         <div class="t-sep"></div>
-        <div class="t-name">Aadithya R.</div><div class="t-tag">Polaroid Prints · Bangalore</div>
+        <div class="t-tag">Polaroid Prints · Bangalore</div>
       </div>
       <div class="t-card">
-        <div class="t-stars">★★★★★</div>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120" alt="Varshini T." style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid var(--beige);" referrerpolicy="no-referrer" />
+          <div>
+            <div class="t-stars">★★★★★</div>
+            <div class="t-name" style="margin:0; font-size:0.95rem;">Varshini T.</div>
+          </div>
+        </div>
         <p class="t-quote">"The photo collage I ordered for my mom's birthday made her so emotional. Amazing quality, perfectly packaged. Will definitely order again!"</p>
         <div class="t-sep"></div>
-        <div class="t-name">Varshini T.</div><div class="t-tag">Photo Collage · Chennai</div>
+        <div class="t-tag">Photo Collage · Chennai</div>
       </div>
     </div>
   </div>
@@ -369,11 +952,148 @@
       <li><a style="color:rgba(255,255,255,0.15);cursor:default">Chennai, India</a></li>
     </ul></div>
   </div>
-  <div class="footer-bot">
-    <span class="f-copy">© 2025 Artlane Diaries. Made with ♥ in Chennai.</span>
-    <span class="f-copy">UPI: 9500565091@paytm</span>
+  <div class="footer-bot" style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 10px; border-top: 1px solid rgba(255,255,255,0.06); text-align: center;">
+    <span class="f-copy" style="font-size: 0.8rem; color: rgba(255,255,255,0.45);">© 2025 Artlane Diaries. Handcrafted beautifully in Chennai, India.</span>
+    <div class="f-policy-links" style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; font-size: 0.76rem;">
+      <button onclick="window.triggerPolicy('refund')" style="background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; text-decoration: underline; font-family: inherit; font-size: inherit; transition: color 0.2s;" onmouseover="this.style.color='#f39c12'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Refund Policy</button>
+      <span style="color: rgba(255,255,255,0.25);">•</span>
+      <button onclick="window.triggerPolicy('privacy')" style="background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; text-decoration: underline; font-family: inherit; font-size: inherit; transition: color 0.2s;" onmouseover="this.style.color='#f39c12'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Privacy Policy</button>
+      <span style="color: rgba(255,255,255,0.25);">•</span>
+      <button onclick="window.triggerPolicy('terms')" style="background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; text-decoration: underline; font-family: inherit; font-size: inherit; transition: color 0.2s;" onmouseover="this.style.color='#f39c12'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Terms of Service</button>
+    </div>
+    <span class="f-copy" style="font-size: 0.72rem; color: rgba(255,255,255,0.3); font-family: var(--font-mono);">Merchant UPI: 9500565091@paytm</span>
   </div>
 </footer>
+</div><!-- End page1-segment -->
+
+<!-- POLICY POPUP MODALS -->
+<div id="policyModal" class="policy-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+  <div class="policy-modal-card" style="background: #fff; border-radius: 12px; width: 100%; max-width: 550px; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid var(--beige); display: flex; flex-direction: column;">
+    <div style="padding: 20px 24px; border-bottom: 1px solid var(--beige); display: flex; justify-content: space-between; align-items: center; background: #faf8f5; sticky; top: 0;">
+      <h3 id="policyModalTitle" style="font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--ink); margin: 0;">Policy Title</h3>
+      <button onclick="window.closePolicy()" style="background: none; border: none; font-size: 1.3rem; font-weight: 700; color: var(--muted); cursor: pointer; padding: 4px;">✕</button>
+    </div>
+    <div id="policyModalBody" style="padding: 24px; font-size: 0.85rem; line-height: 1.7; color: var(--ink); overflow-y: auto;">
+      <!-- Content injected by main.ts -->
+    </div>
+    <div style="padding: 16px 24px; border-top: 1px solid var(--beige); background: #faf8f5; display: flex; justify-content: flex-end;">
+      <button onclick="window.closePolicy()" style="background: var(--ink); color: #fff; border: none; padding: 8px 18px; border-radius: var(--rs); font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Close Policy</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM CONFIRMATION MODAL -->
+<div id="confirmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #fff; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid var(--beige); display: flex; flex-direction: column; overflow: hidden; animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;">
+    <div style="padding: 20px 24px; border-bottom: 1px solid var(--beige); background: #faf8f5;">
+      <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--ink); margin: 0;">Clear Saved Items?</h3>
+    </div>
+    <div style="padding: 24px; font-size: 0.88rem; line-height: 1.6; color: var(--ink);">
+      Are you sure you want to completely clear your entire "Saved for Later" list? This action cannot be undone.
+    </div>
+    <div style="padding: 16px 24px; border-top: 1px solid var(--beige); background: #faf8f5; display: flex; justify-content: flex-end; gap: 10px;">
+      <button onclick="window.closeConfirmModal()" style="background: none; border: 1.5px solid var(--beige); color: var(--muted); padding: 8px 16px; border-radius: var(--rs); font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#faf8f5'" onmouseout="this.style.background='none'">Cancel</button>
+      <button onclick="window.confirmClearSaved()" style="background: #c0392b; color: #fff; border: none; padding: 8px 18px; border-radius: var(--rs); font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Clear All</button>
+    </div>
+  </div>
+</div>
+
+<!-- DYNAMIC WHATSAPP QUICK CHECKOUT MODAL -->
+<div id="quickWAModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10100; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #fff; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid var(--beige); display: flex; flex-direction: column; overflow: hidden; animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;">
+    <div style="padding: 20px 24px; border-bottom: 1px solid var(--beige); background: #faf8f5; display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--ink); margin: 0; display: flex; align-items: center; gap: 6px;">💬 Quick Order</h3>
+      <button onclick="window.closeQuickWAModal()" style="background: none; border: none; font-size: 1.25rem; font-weight: 700; color: var(--muted); cursor: pointer; padding: 4px;">✕</button>
+    </div>
+    
+    <div style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+      <div id="quickWAItemBadge" style="background: #faf8f5; border: 1.5px solid var(--beige); border-radius: 8px; padding: 12px 14px; display: flex; gap: 12px; align-items: center;">
+        <span id="quickWAEmoji" style="font-size: 2rem;">📦</span>
+        <div>
+          <div id="quickWATitle" style="font-weight: 700; font-size: 0.9rem; color: var(--ink);">Product Name</div>
+          <div id="quickWAPrice" style="font-weight: 700; color: var(--amber); font-size: 0.82rem; font-family:'Playfair Display',serif; margin-top: 2px;">₹200</div>
+        </div>
+      </div>
+      
+      <p style="font-size: 0.76rem; color: var(--muted); line-height: 1.5; margin: 0;">
+        🛡️ <strong>Secure Ordering Process:</strong> Fill in your delivery details below to generate your automatic WhatsApp dispatch token. We do not require payment before photo review!
+      </p>
+
+      <form id="quickWAForm" onsubmit="event.preventDefault(); window.submitQuickWhatsAppOrder();" style="display: flex; flex-direction: column; gap: 10px;">
+        <div>
+          <label style="font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px;">Full Name</label>
+          <input type="text" id="qCustName" class="checkout-input" style="margin: 0; background: #faf8f5; border: 1px solid var(--beige);" placeholder="e.g. Priya Sharma" required />
+        </div>
+        <div>
+          <label style="font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px;">WhatsApp Number</label>
+          <input type="tel" id="qCustPhone" class="checkout-input" style="margin: 0; background: #faf8f5; border: 1px solid var(--beige);" placeholder="10 Digits WhatsApp Support" required pattern="[0-9]{10}" />
+        </div>
+        <div>
+          <label style="font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 4px;">Full Delivery Address</label>
+          <textarea id="qCustAddress" class="checkout-input" style="margin: 0; background: #faf8f5; border: 1px solid var(--beige); font-family: inherit;" placeholder="House/Flat No, Landmark, City, State, Pincode" required rows="2"></textarea>
+        </div>
+        
+        <button type="submit" style="background: #25D366; color: #fff; border: none; padding: 14px; border-radius: var(--rs); font-size: 0.85rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; transition: background 0.2s;" onmouseover="this.style.background='#1ebe5d'" onmouseout="this.style.background='#25D366'">
+          💬 Order on WhatsApp & Confirm Free Shipping
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- PREMIUM SIZE GUIDE MODAL -->
+<div id="premiumSizeGuideModal" class="p-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:10200; align-items:center; justify-content:center; padding:20px;" onclick="window.toggleSizeGuideModal(false)">
+  <div class="p-modal-card" style="background:#fff; border-radius:12px; width:100%; max-width:480px; box-shadow:0 20px 50px rgba(0,0,0,0.15); border:1px solid var(--beige); padding:24px; position:relative; overflow:hidden;" onclick="event.stopPropagation()">
+    <button onclick="window.toggleSizeGuideModal(false)" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:1.15rem; font-weight:700; color:var(--muted); cursor:pointer; padding:4px;">✕</button>
+    <div style="text-align:center; margin-bottom:16px;">
+      <h3 style="font-family:'Playfair Display', serif; font-size:1.4rem; color:var(--ink); margin:0 0 4px 0;">📐 Sizing Dimensions <em>Guide</em></h3>
+      <p style="font-size:0.75rem; color:var(--muted); margin:0;">Find the perfect measurements for your portrait prints</p>
+    </div>
+    
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.78rem;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--beige); color:var(--muted); font-weight:700;">
+            <th style="padding:8px 4px;">Size Format</th>
+            <th style="padding:8px 4px;">Dimensions</th>
+            <th style="padding:8px 4px;">Best Suited Places</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--beige);">
+            <td style="padding:10px 4px; font-weight:700; color:var(--ink);">A5 Sizing</td>
+            <td style="padding:10px 4px; color:var(--amber); font-weight:500;">14.8 × 21.0 cm</td>
+            <td style="padding:10px 4px; color:var(--muted);">Study desk spaces, small wall tiles</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--beige);">
+            <td style="padding:10px 4px; font-weight:700; color:var(--ink);">A4 Sizing</td>
+            <td style="padding:10px 4px; color:var(--amber); font-weight:500;">21.0 × 29.7 cm</td>
+            <td style="padding:10px 4px; color:var(--muted);">Bedside frames, personal collages</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--beige);">
+            <td style="padding:10px 4px; font-weight:700; color:var(--ink);">A3 Sizing</td>
+            <td style="padding:10px 4px; color:var(--amber); font-weight:500;">29.7 × 42.0 cm</td>
+            <td style="padding:10px 4px; color:var(--muted);">Living room feature focus, gallery frames</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--beige);">
+            <td style="padding:10px 4px; font-weight:700; color:var(--ink);">13 × 19 Sizing</td>
+            <td style="padding:10px 4px; color:var(--amber); font-weight:500;">33.0 × 48.3 cm</td>
+            <td style="padding:10px 4px; color:var(--muted);">Cinema rooms, main master bedroom walls</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div style="background:rgba(184,132,74,0.04); border:1px solid var(--beige); border-radius:6px; padding:10px; margin-top:14px; font-size:0.75rem; color:var(--muted); line-height:1.4;">
+      💡 <strong>Pro-Tip:</strong> Ensure your uploaded references are clear and not blurry. Our dedicated Chennai artists manually review your files for free before active processing!
+    </div>
+    
+    <button onclick="window.toggleSizeGuideModal(false)" style="background:var(--ink); color:#fff; font-size:0.75rem; font-weight:700; border:none; width:100%; border-radius:6px; padding:12px; margin-top:14px; cursor:pointer;">
+      Perfect, Keep Sizing
+    </button>
+  </div>
+</div>
+
 <button class="stb" id="stb" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script type="module" src="/src/main.ts"></script>
