@@ -42,8 +42,7 @@ export const PREMIUM_PRODUCTS = [
     sizes: [
       { name: 'A5', label: 'A5 Size', price: 80, dims: '14.8×21cm' },
       { name: 'A4', label: 'A4 Size', price: 129, dims: '21×29.7cm' },
-      { name: 'A3', label: 'A3 Size', price: 249, dims: '29.7×42cm' },
-      { name: '13x19', label: '13×19 Inches', price: 349, dims: '33×48.3cm' }
+      { name: 'A3', label: 'A3 Size', price: 249, dims: '29.7×42cm' }
     ]
   },
   {
@@ -131,6 +130,7 @@ export let activeQty = 1;
 export interface UploadedFile {
   file: File;
   src: string;
+  originalSrc?: string;
 }
 export let uploadedMockupFiles: UploadedFile[] = [];
 
@@ -152,6 +152,10 @@ declare global {
     selectPremiumProduct: any; selectPremiumSize: any; changePremiumQty: any;
     onPremiumFiles: any; removePremiumUpload: any; submitPremiumOrderToCart: any;
     submitPremiumOrderToWhatsApp: any; toggleSizeGuideModal: any; scrollToCustomizer: any; showPage: any; clickCatalogProduct: any; toggleFaqItem: any; clickPremiumCard: any;
+    // Crop engine functionality
+    openCropModal: any; closeCropModal: any; applyAndSaveCrop: any;
+    onCropZoomChange: any; onCropShiftChange: any; rotateCropImage: any;
+    setCropRatio: any;
   }
 }
 
@@ -917,7 +921,15 @@ export function orderCustomWhatsApp(subType: string) {
   const s = CS[subType];
   const filesCount = s.files ? s.files.length : 0;
   
-  activeQuickWAItem = { type: 'custom', subType, size: s.size, price: s.price, filesCount };
+  activeQuickWAItem = { 
+    type: 'custom', 
+    subType, 
+    size: s.size, 
+    price: s.price, 
+    filesCount,
+    prodId: subType === 'art' ? 'ART-SLOT' : 'PRINT-SLOT',
+    prodName: subType === 'art' ? 'Hand-Drawn Portrait upload' : 'Custom Print Pack upload'
+  };
   
   const em = document.getElementById('quickWAEmoji');
   const ti = document.getElementById('quickWATitle');
@@ -974,10 +986,34 @@ export function submitQuickWhatsAppOrder() {
   
   if (activeQuickWAItem && activeQuickWAItem.type === 'catalog') {
     const p = activeQuickWAItem.prod;
-    text = `Hi Artlane Diaries! 🎨\nI want to place an Instant Order via your social 1-click checkout.\n\n*Order ID:* ${orderId}\n*Product:* ${p.name}\n*Price:* ₹${p.price}\n\n*Delivery Details:*\n👤 *Name:* ${name}\n📞 *WhatsApp:* ${phone}\n📍 *Address:* ${address}\n\n*Payment Flow:*\n🔗 Please confirm design sizing details next, and text me the secure payment link!`;
+    const formattedId = p.id < 10 ? `AL-0${p.id}` : `AL-${p.id}`;
+    text = `Hi Artlane Diaries! 🎨\nI want to place an Instant Order via your social 1-click checkout.\n\n✨ *Product:* ${p.name}\n🆔 *Product ID:* #${formattedId}\n*Order ID:* ${orderId}\n*Price:* ₹${p.price}\n\n*Delivery Details:*\n👤 *Name:* ${name}\n📞 *WhatsApp:* ${phone}\n📍 *Address:* ${address}\n\n*Payment Flow:*\n🔗 Please confirm design sizing details next, and text me the secure payment link!`;
   } else if (activeQuickWAItem && activeQuickWAItem.type === 'custom') {
     const q = activeQuickWAItem;
-    text = `Hi Artlane Diaries! 🎨\nI want to place an Instant Custom Order via your photo-upload checkout.\n\n*Order ID:* ${orderId}\n*Type:* ${q.subType === 'art' ? 'Hand-Drawn Portrait' : 'Custom Polaroid/Gift Print Pack'}\n*Size Selected:* ${q.size}\n*Total Files Selected:* ${q.filesCount}\n*Total Price:* ₹${q.price}\n\n*Delivery Details:*\n👤 *Name:* ${name}\n📞 *WhatsApp:* ${phone}\n📍 *Address:* ${address}\n\n*Payment Flow:*\n🔗 I have uploaded ${q.filesCount} memories in browser preview. Please confirm image borders & drop my secure payment link on WhatsApp!`;
+    let finalItemName = q.prodName || '';
+    let finalProdId = q.prodId || 'CUSTOM';
+
+    if (!finalItemName && activeCatalogProduct) {
+      finalItemName = activeCatalogProduct.name;
+      finalProdId = activeCatalogProduct.id;
+    }
+
+    if (!finalItemName) {
+      const activeProd = PREMIUM_PRODUCTS.find(p => p.id === activeProdId);
+      if (activeProd) {
+        finalItemName = activeProd.name;
+        finalProdId = activeProd.id.toUpperCase();
+      } else {
+        finalItemName = q.subType === 'art' ? 'Hand-Drawn Portrait' : 'Custom Polaroid/Gift Print Pack';
+        finalProdId = q.subType === 'art' ? 'ART-SLOT' : 'PRINT-SLOT';
+      }
+    }
+
+    const formattedProdId = typeof finalProdId === 'number'
+      ? (finalProdId < 10 ? `AL-0${finalProdId}` : `AL-${finalProdId}`)
+      : `AL-${finalProdId}`;
+
+    text = `Hi Artlane Diaries! 🎨\nI want to place an Instant Custom Order via your photo-upload checkout.\n\n✨ *Product Name:* ${finalItemName}\n🆔 *Product ID:* #${formattedProdId}\n*Order ID:* ${orderId}\n*Type:* ${q.subType === 'art' ? 'Hand-Drawn Portrait Detail' : 'Custom Polaroid/Gift Print'}\n*Size Selected:* ${q.size || 'N/A'}\n*Total Files Selected:* ${q.filesCount}\n*Total Price:* ₹${q.price}\n\n*Delivery Details:*\n👤 *Name:* ${name}\n📞 *WhatsApp:* ${phone}\n📍 *Address:* ${address}\n\n*Payment Flow:*\n🔗 I have uploaded ${q.filesCount} memories in browser preview. Please confirm image borders & drop my secure payment link on WhatsApp!`;
     
     // Clean up corresponding custom slot state
     CS[q.subType].files = [];
@@ -1127,12 +1163,33 @@ export function showPage(pageNum: number) {
   }
 }
 
+export let activeCatalogProduct: any = null;
+
+export function isArtOrPainting(): boolean {
+  if (!activeCatalogProduct) return false;
+  return activeCatalogProduct.cat === 'art' && activeCatalogProduct.id !== 5 && activeCatalogProduct.id !== 6;
+}
+
+export function getCurrentSizes(prod: any): any[] {
+  if (prod.id === 'poster') {
+    const baseSizes = prod.sizes.filter((sz: any) => sz.name !== '13x19');
+    if (isArtOrPainting()) {
+      return baseSizes.filter((sz: any) => sz.name === 'A3');
+    }
+    return baseSizes;
+  }
+  return prod.sizes;
+}
+
 export function selectPremiumProduct(prodId: string, isInitial: boolean = false) {
   activeProdId = prodId;
   const prod = PREMIUM_PRODUCTS.find(p => p.id === prodId);
   if (!prod) return;
 
-  activeSizeIndex = 0; // Choose first size by default
+  const sizes = getCurrentSizes(prod);
+  if (activeSizeIndex >= sizes.length) {
+    activeSizeIndex = 0; // Choose first size by default
+  }
 
   // Update selection CSS border on product scrolling cards
   document.querySelectorAll('.p-sliding-card').forEach(card => {
@@ -1163,13 +1220,13 @@ export function selectPremiumProduct(prodId: string, isInitial: boolean = false)
   // Update Pricing Displays
   const origPriceEl = document.getElementById('pOrigPrice');
   const activePriceEl = document.getElementById('pActivePrice');
-  if (origPriceEl) origPriceEl.textContent = `₹${Math.round(prod.sizes[activeSizeIndex].price * 1.4 + 19)}`;
-  if (activePriceEl) activePriceEl.textContent = `₹${prod.sizes[activeSizeIndex].price}`;
+  if (origPriceEl) origPriceEl.textContent = `₹${Math.round(sizes[activeSizeIndex].price * 1.4 + 19)}`;
+  if (activePriceEl) activePriceEl.textContent = `₹${sizes[activeSizeIndex].price}`;
 
   // Update Sizes selection grid list
   const sizeGridEl = document.getElementById('pSizesGrid');
   if (sizeGridEl) {
-    sizeGridEl.innerHTML = prod.sizes.map((sz, idx) => `
+    sizeGridEl.innerHTML = sizes.map((sz, idx) => `
       <button class="premium-size-btn ${idx === activeSizeIndex ? 'active' : ''}" onclick="window.selectPremiumSize(${idx})">
         <div class="sz-radio">${idx === activeSizeIndex ? '●' : '○'}</div>
         <div style="text-align:left; flex:1;">
@@ -1194,6 +1251,9 @@ export function selectPremiumProduct(prodId: string, isInitial: boolean = false)
 }
 
 export function clickCatalogProduct(id: number) {
+  const prod = PRODS.find(p => p.id === id);
+  activeCatalogProduct = prod || null;
+
   const mapping: Record<number, string> = {
     1: 'poster',      // Pencil Portrait
     2: 'poster',      // Painting
@@ -1212,7 +1272,6 @@ export function clickCatalogProduct(id: number) {
   const premiumId = mapping[id] || 'poster';
   selectPremiumProduct(premiumId);
 
-  const prod = PRODS.find(p => p.id === id);
   if (prod) {
     const titleEl = document.getElementById('pTitle');
     if (titleEl) {
@@ -1238,6 +1297,7 @@ export function clickCatalogProduct(id: number) {
 }
 
 export function clickPremiumCard(prodId: string) {
+  activeCatalogProduct = null;
   selectPremiumProduct(prodId);
   showPage(2);
   setTimeout(() => {
@@ -1277,11 +1337,13 @@ export function selectPremiumSize(index: number) {
   const prod = PREMIUM_PRODUCTS.find(p => p.id === activeProdId);
   if (!prod) return;
 
+  const sizes = getCurrentSizes(prod);
+
   // Update Pricing Displays
   const origPriceEl = document.getElementById('pOrigPrice');
   const activePriceEl = document.getElementById('pActivePrice');
-  if (origPriceEl) origPriceEl.textContent = `₹${Math.round(prod.sizes[activeSizeIndex].price * 1.4 + 19)}`;
-  if (activePriceEl) activePriceEl.textContent = `₹${prod.sizes[activeSizeIndex].price}`;
+  if (origPriceEl) origPriceEl.textContent = `₹${Math.round(sizes[activeSizeIndex].price * 1.4 + 19)}`;
+  if (activePriceEl) activePriceEl.textContent = `₹${sizes[activeSizeIndex].price}`;
 
   // Update active state in Size list buttons
   document.querySelectorAll('.premium-size-btn').forEach((btn, idx) => {
@@ -1322,9 +1384,11 @@ export function onPremiumFiles(input: HTMLInputElement) {
   for (const f of filesToAdd) {
     const r = new FileReader();
     r.onload = e => {
+      const base64Data = e.target?.result as string;
       uploadedMockupFiles.push({
         file: f,
-        src: e.target?.result as string
+        src: base64Data,
+        originalSrc: base64Data
       });
       loadedCount++;
       if (loadedCount === filesToAdd.length) {
@@ -1364,16 +1428,17 @@ export function renderUploadedThumbs() {
   let html = '';
   uploadedMockupFiles.forEach((fileObj, idx) => {
     html += `
-      <div class="thumb-item" style="position:relative; width:52px; height:52px; border-radius:6px; overflow:hidden; border:1px solid var(--beige); flex-shrink:0; background:#faf8f5;">
-        <img class="mockup-image-fade" src="${fileObj.src}" style="width:100%; height:100%; object-fit:contain;" />
-        <button class="thumb-del" onclick="window.removePremiumUpload(${idx})" style="position:absolute; top:2px; right:2px; background:rgba(0,0,0,0.6); color:#fff; border:none; border-radius:50%; width:14px; height:14px; font-size:8px; display:flex; align-items:center; justify-content:center; cursor:pointer;" title="Remove image">✕</button>
+      <div class="thumb-item" onclick="window.openCropModal(${idx})" style="position:relative; width:64px; height:64px; border-radius:8px; overflow:hidden; border:1.5px solid var(--beige); flex-shrink:0; background:#faf8f5; cursor:pointer;" title="Click to crop or adjust focus area">
+        <img class="mockup-image-fade" src="${fileObj.src}" style="width:100%; height:100%; object-fit:cover;" />
+        <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.55); color:#fff; font-size:8px; text-align:center; padding:2px 0; font-family:'Inter',sans-serif; font-weight:600; pointer-events:none; display:flex; align-items:center; justify-content:center; gap:2x;">✏️ Focus</div>
+        <button class="thumb-del" onclick="event.stopPropagation(); window.removePremiumUpload(${idx})" style="position:absolute; top:3px; right:3px; background:rgba(0,0,0,0.7); color:#fff; border:none; border-radius:50%; width:16px; height:16px; font-size:9px; display:flex; align-items:center; justify-content:center; cursor:pointer; line-height:1;" title="Remove image">✕</button>
       </div>
     `;
   });
 
   if (uploadedMockupFiles.length < 10) {
     html += `
-      <div class="add-more-thumb" onclick="document.getElementById('premiumFileInput').click()" style="width:52px; height:52px; border-radius:6px; border:2px dashed var(--warm); display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700; color:var(--muted); font-size:1.1rem; flex-shrink:0; background:rgba(196,168,130,0.04);">
+      <div class="add-more-thumb" onclick="document.getElementById('premiumFileInput').click()" style="width:64px; height:64px; border-radius:8px; border:2px dashed var(--warm); display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700; color:var(--muted); font-size:1.1rem; flex-shrink:0; background:rgba(196,168,130,0.04);">
         <span>+</span>
       </div>
     `;
@@ -1389,7 +1454,8 @@ export function renderPremiumSummary() {
   const prod = PREMIUM_PRODUCTS.find(p => p.id === activeProdId);
   if (!prod) return;
 
-  const sizeObj = prod.sizes[activeSizeIndex];
+  const sizes = getCurrentSizes(prod);
+  const sizeObj = sizes[activeSizeIndex];
   const unitPrice = sizeObj.price;
   const rawSubtotal = unitPrice * activeQty;
 
@@ -1496,7 +1562,8 @@ export function submitPremiumOrderToCart() {
   const prod = PREMIUM_PRODUCTS.find(p => p.id === activeProdId);
   if (!prod) return;
 
-  const sizeObj = prod.sizes[activeSizeIndex];
+  const sizes = getCurrentSizes(prod);
+  const sizeObj = sizes[activeSizeIndex];
   const unitPrice = sizeObj.price;
   const rawSubtotal = unitPrice * activeQty;
   const fileCount = uploadedMockupFiles.length;
@@ -1544,7 +1611,8 @@ export function submitPremiumOrderToWhatsApp() {
   const prod = PREMIUM_PRODUCTS.find(p => p.id === activeProdId);
   if (!prod) return;
 
-  const sizeObj = prod.sizes[activeSizeIndex];
+  const sizes = getCurrentSizes(prod);
+  const sizeObj = sizes[activeSizeIndex];
   const unitPrice = sizeObj.price;
   const rawSubtotal = unitPrice * activeQty;
   const fileCount = uploadedMockupFiles.length;
@@ -1565,7 +1633,9 @@ export function submitPremiumOrderToWhatsApp() {
     subType: 'print',
     size: sizeObj.label,
     price: finalPrice,
-    filesCount: fileCount
+    filesCount: fileCount,
+    prodId: activeCatalogProduct ? activeCatalogProduct.id : (prod ? prod.id : 'N/A'),
+    prodName: activeCatalogProduct ? activeCatalogProduct.name : (prod ? prod.name : 'N/A')
   };
 
   const em = document.getElementById('quickWAEmoji');
@@ -1690,6 +1760,414 @@ function fallbackCopyToClipboard() {
 
 
 
+// Crop Engine State Configuration
+export let activeCropFileIndex: number | null = null;
+export let cropImgInstance: HTMLImageElement | null = null;
+export let cropAngle = 0;
+export let cropZoom = 1.0;
+export let cropPanX = 0;
+export let cropPanY = 0;
+export let cropAspectRatio = 1.0; // Default to square 1:1
+
+let cropIsDragging = false;
+let cropDragStartX = 0;
+let cropDragStartY = 0;
+
+export function drawCropCanvas() {
+  const canvas = document.getElementById('cropCanvas') as HTMLCanvasElement;
+  if (!canvas || !cropImgInstance) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const Cw = canvas.width;
+  const Ch = canvas.height;
+
+  // Clear first
+  ctx.clearRect(0, 0, Cw, Ch);
+
+  // Draw background grid pattern
+  ctx.fillStyle = '#faf8f5';
+  ctx.fillRect(0, 0, Cw, Ch);
+
+  // Canvas bounds limits
+  const maxW = 340;
+  const maxH = 240;
+
+  // Fit active aspect ratio inside bounds
+  let cropW = maxW;
+  let cropH = maxH;
+  const A = cropAspectRatio;
+
+  if (A > 0) {
+    if (maxW / maxH > A) {
+      cropH = maxH;
+      cropW = maxH * A;
+    } else {
+      cropW = maxW;
+      cropH = maxW / A;
+    }
+  } else {
+    // Free form
+    const imgA = cropImgInstance.width / cropImgInstance.height;
+    if (maxW / maxH > imgA) {
+      cropH = maxH;
+      cropW = maxH * imgA;
+    } else {
+      cropW = maxW;
+      cropH = maxW / imgA;
+    }
+  }
+
+  // Centering crop selector box
+  const cropX = (Cw - cropW) / 2;
+  const cropY = (Ch - cropH) / 2;
+
+  // 1. Save and apply image transforms behind the mask window
+  ctx.save();
+  ctx.translate(Cw / 2 + cropPanX, Ch / 2 + cropPanY);
+  ctx.rotate((cropAngle * Math.PI) / 180);
+  ctx.scale(cropZoom, cropZoom);
+
+  // Draw original image centered
+  ctx.drawImage(
+    cropImgInstance,
+    -cropImgInstance.width / 2,
+    -cropImgInstance.height / 2
+  );
+  ctx.restore();
+
+  // 2. Draw dim mask outside crop box
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+  // Top
+  ctx.fillRect(0, 0, Cw, cropY);
+  // Bottom
+  ctx.fillRect(0, cropY + cropH, Cw, Ch - (cropY + cropH));
+  // Left
+  ctx.fillRect(0, cropY, cropX, cropH);
+  // Right
+  ctx.fillRect(cropX + cropW, cropY, Cw - (cropX + cropW), cropH);
+
+  // 3. Draw active focus box outlines
+  ctx.strokeStyle = '#b8844a'; // Amber accent
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(cropX, cropY, cropW, cropH);
+
+  // Draw focus corner indicators
+  ctx.fillStyle = '#b8844a';
+  const cSize = 8;
+  // Top Left
+  ctx.fillRect(cropX - 2, cropY - 2, cSize, cSize);
+  // Top Right
+  ctx.fillRect(cropX + cropW - cSize + 2, cropY - 2, cSize, cSize);
+  // Bottom Left
+  ctx.fillRect(cropX - 2, cropY + cropH - cSize + 2, cSize, cSize);
+  // Bottom Right
+  ctx.fillRect(cropX + cropW - cSize + 2, cropY + cropH - cSize + 2, cSize, cSize);
+
+  // 4. Draw stylish rule-of-thirds gridlines inside the focus box
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  // Vertical lines
+  ctx.moveTo(cropX + cropW / 3, cropY);
+  ctx.lineTo(cropX + cropW / 3, cropY + cropH);
+  ctx.moveTo(cropX + (cropW * 2) / 3, cropY);
+  ctx.lineTo(cropX + (cropW * 2) / 3, cropY + cropH);
+  // Horizontal lines
+  ctx.moveTo(cropX, cropY + cropH / 3);
+  ctx.lineTo(cropX + cropW, cropY + cropH / 3);
+  ctx.moveTo(cropX, cropY + (cropH * 2) / 3);
+  ctx.lineTo(cropX + cropW, cropY + (cropH * 2) / 3);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+export function initCropModalEvents() {
+  const canvas = document.getElementById('cropCanvas') as HTMLCanvasElement;
+  if (!canvas) return;
+
+  const getMousePos = (e: MouseEvent | TouchEvent) => {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = ('touches' in e) ? e.touches[0].clientX : e.clientX;
+    const clientY = ('touches' in e) ? e.touches[0].clientY : e.clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  };
+
+  const handleDown = (e: MouseEvent | TouchEvent) => {
+    if (!cropImgInstance) return;
+    cropIsDragging = true;
+    const pos = getMousePos(e);
+    cropDragStartX = pos.x - cropPanX;
+    cropDragStartY = pos.y - cropPanY;
+    if (e.cancelable) e.preventDefault();
+  };
+
+  const handleMove = (e: MouseEvent | TouchEvent) => {
+    if (!cropIsDragging) return;
+    const pos = getMousePos(e);
+    cropPanX = pos.x - cropDragStartX;
+    cropPanY = pos.y - cropDragStartY;
+
+    // Direct clamping of values on Shift Sliders
+    const sliderX = document.getElementById('cropShiftX') as HTMLInputElement;
+    const sliderY = document.getElementById('cropShiftY') as HTMLInputElement;
+    if (sliderX) sliderX.value = cropPanX.toString();
+    if (sliderY) sliderY.value = cropPanY.toString();
+
+    drawCropCanvas();
+  };
+
+  const handleUp = () => {
+    cropIsDragging = false;
+  };
+
+  // Clear existing listeners to prevent compounding
+  const clone = canvas.cloneNode(true) as HTMLCanvasElement;
+  canvas.parentNode?.replaceChild(clone, canvas);
+
+  clone.addEventListener('mousedown', handleDown);
+  clone.addEventListener('mousemove', handleMove);
+  clone.addEventListener('mouseup', handleUp);
+  clone.addEventListener('mouseleave', handleUp);
+
+  clone.addEventListener('touchstart', handleDown, { passive: false });
+  clone.addEventListener('touchmove', handleMove, { passive: false });
+  clone.addEventListener('touchend', handleUp, { passive: true });
+}
+
+export function openCropModal(idx: number) {
+  activeCropFileIndex = idx;
+  const fileObj = uploadedMockupFiles[idx];
+  if (!fileObj) return;
+
+  const modal = document.getElementById('imageCropModal');
+  if (!modal) return;
+
+  modal.style.display = 'flex';
+
+  // Load image instance
+  const img = new Image();
+  img.src = fileObj.originalSrc || fileObj.src;
+  cropImgInstance = img;
+
+  img.onload = () => {
+    cropAngle = 0;
+    cropPanX = 0;
+    cropPanY = 0;
+
+    // Set crop aspect ratio dynamically based on selected style if not customized
+    if (activeProdId === 'poster') {
+      cropAspectRatio = 0.707; // Portrait default shape (A4)
+    } else if (activeProdId === 'photobooth') {
+      cropAspectRatio = 0.667; // 3:4 strips
+    } else {
+      cropAspectRatio = 1.0; // Square
+    }
+
+    // Centering calculation to find fitScale 
+    const maxW = 340;
+    const maxH = 240;
+    let cropW = maxW;
+    let cropH = maxH;
+    const A = cropAspectRatio;
+
+    if (maxW / maxH > A) {
+      cropH = maxH;
+      cropW = maxH * A;
+    } else {
+      cropW = maxW;
+      cropH = maxW / A;
+    }
+
+    const fitScale = Math.max(cropW / img.width, cropH / img.height);
+    cropZoom = Math.max(0.1, Math.round(fitScale * 1.15 * 100) / 100);
+
+    // Sync input sliders
+    const zoomInput = document.getElementById('cropZoom') as HTMLInputElement;
+    if (zoomInput) {
+      zoomInput.value = cropZoom.toString();
+      const zoomValEl = document.getElementById('cropZoomVal');
+      if (zoomValEl) zoomValEl.textContent = `${cropZoom.toFixed(2)}x`;
+    }
+
+    const sliderX = document.getElementById('cropShiftX') as HTMLInputElement;
+    const sliderY = document.getElementById('cropShiftY') as HTMLInputElement;
+    if (sliderX) {
+      sliderX.min = (-img.width).toString();
+      sliderX.max = img.width.toString();
+      sliderX.value = '0';
+    }
+    if (sliderY) {
+      sliderY.min = (-img.height).toString();
+      sliderY.max = img.height.toString();
+      sliderY.value = '0';
+    }
+
+    updateRatioBtnStates();
+    initCropModalEvents();
+    drawCropCanvas();
+  };
+}
+
+export function updateRatioBtnStates() {
+  const btn1 = document.getElementById('cropRatio1'); // 1:1
+  const btn2 = document.getElementById('cropRatio2'); // 0.707
+  const btn3 = document.getElementById('cropRatio3'); // 0.667
+  const btn4 = document.getElementById('cropRatio4'); // Free
+
+  const btns = [btn1, btn2, btn3, btn4];
+  btns.forEach(b => {
+    if (b) {
+      b.style.background = '#fff';
+      b.style.color = 'var(--muted)';
+      b.style.borderColor = 'var(--beige)';
+    }
+  });
+
+  const activeBtn = 
+    cropAspectRatio === 1.0 ? btn1 :
+    cropAspectRatio === 0.707 ? btn2 :
+    cropAspectRatio === 0.667 ? btn3 :
+    btn4;
+
+  if (activeBtn) {
+    activeBtn.style.background = 'var(--amber)';
+    activeBtn.style.color = '#fff';
+    activeBtn.style.borderColor = 'var(--amber)';
+  }
+}
+
+export function onCropZoomChange(val: string) {
+  cropZoom = parseFloat(val);
+  const zoomValEl = document.getElementById('cropZoomVal');
+  if (zoomValEl) zoomValEl.textContent = `${cropZoom.toFixed(2)}x`;
+  drawCropCanvas();
+}
+
+export function onCropShiftChange(axis: 'x' | 'y', val: string) {
+  if (axis === 'x') {
+    cropPanX = parseInt(val);
+  } else {
+    cropPanY = parseInt(val);
+  }
+  drawCropCanvas();
+}
+
+export function rotateCropImage() {
+  cropAngle = (cropAngle + 90) % 360;
+  drawCropCanvas();
+}
+
+export function setCropRatio(ratio: number, btn?: HTMLElement) {
+  cropAspectRatio = ratio;
+  updateRatioBtnStates();
+  
+  // Re-fit scale after ratio change so it covers nicely
+  if (cropImgInstance) {
+    const maxW = 340;
+    const maxH = 240;
+    let cropW = maxW;
+    let cropH = maxH;
+    const A = cropAspectRatio > 0 ? cropAspectRatio : (cropImgInstance.width / cropImgInstance.height);
+
+    if (maxW / maxH > A) {
+      cropH = maxH;
+      cropW = maxH * A;
+    } else {
+      cropW = maxW;
+      cropH = maxW / A;
+    }
+
+    const fitScale = Math.max(cropW / cropImgInstance.width, cropH / cropImgInstance.height);
+    cropZoom = Math.max(0.1, Math.round(fitScale * 1.15 * 100) / 100);
+
+    const zoomInput = document.getElementById('cropZoom') as HTMLInputElement;
+    if (zoomInput) {
+      zoomInput.value = cropZoom.toString();
+      const zoomValEl = document.getElementById('cropZoomVal');
+      if (zoomValEl) zoomValEl.textContent = `${cropZoom.toFixed(2)}x`;
+    }
+  }
+
+  drawCropCanvas();
+}
+
+export function closeCropModal() {
+  const modal = document.getElementById('imageCropModal');
+  if (modal) modal.style.display = 'none';
+  activeCropFileIndex = null;
+  cropImgInstance = null;
+}
+
+export function applyAndSaveCrop() {
+  if (activeCropFileIndex === null || !cropImgInstance) return;
+
+  // Fit active aspect ratio inside bounds
+  const maxW = 340;
+  const maxH = 240;
+  let cropW = maxW;
+  let cropH = maxH;
+  const A = cropAspectRatio > 0 ? cropAspectRatio : (cropImgInstance.width / cropImgInstance.height);
+
+  if (maxW / maxH > A) {
+    cropH = maxH;
+    cropW = maxH * A;
+  } else {
+    cropW = maxW;
+    cropH = maxW / A;
+  }
+
+  // Create high-resolution export canvas (e.g. 1200px width for supreme printed outcome)
+  const exportW = 1200;
+  const exportH = Math.round(exportW / A);
+
+  const offCanvas = document.createElement('canvas');
+  offCanvas.width = exportW;
+  offCanvas.height = exportH;
+  const offCtx = offCanvas.getContext('2d');
+
+  if (offCtx) {
+    offCtx.clearRect(0, 0, exportW, exportH);
+
+    // Fit preview to export coordinate systems 
+    const ratio = exportW / cropW;
+
+    offCtx.translate(exportW / 2 + cropPanX * ratio, exportH / 2 + cropPanY * ratio);
+    offCtx.rotate((cropAngle * Math.PI) / 180);
+    offCtx.scale(cropZoom * ratio, cropZoom * ratio);
+
+    offCtx.drawImage(
+      cropImgInstance,
+      -cropImgInstance.width / 2,
+      -cropImgInstance.height / 2
+    );
+
+    const croppedSrc = offCanvas.toDataURL('image/jpeg', 0.9);
+
+    const fileObj = uploadedMockupFiles[activeCropFileIndex];
+    if (!fileObj.originalSrc) {
+      fileObj.originalSrc = fileObj.src; // Preserve unaltered high-res source
+    }
+    fileObj.src = croppedSrc;
+
+    // Refresh layout, preview canvases and summary rows
+    renderUploadedThumbs();
+    updateMockupPreview();
+    renderPremiumSummary();
+
+    showToast('✨ Custom photo crop & focus saved successfully!');
+  }
+
+  closeCropModal();
+}
+
+
+
 // Window Bindings
 window.doFilter = doFilter;
 window.addToCart = addToCart;
@@ -1740,6 +2218,15 @@ window.showPage = showPage;
 window.clickCatalogProduct = clickCatalogProduct;
 window.toggleFaqItem = toggleFaqItem;
 window.clickPremiumCard = clickPremiumCard;
+
+// Crop Engine bindings
+window.openCropModal = openCropModal;
+window.closeCropModal = closeCropModal;
+window.applyAndSaveCrop = applyAndSaveCrop;
+window.onCropZoomChange = onCropZoomChange;
+window.onCropShiftChange = onCropShiftChange;
+window.rotateCropImage = rotateCropImage;
+window.setCropRatio = setCropRatio;
 
 // Intercept clicks on links with hash tags to restore Page 1 and scroll smoothly
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1809,3 +2296,20 @@ setTimeout(() => {
     }
   }
 }, 300);
+
+// TOP PROMO BANNER CONTROLLER
+(window as any).closePromoBanner = function() {
+  const banner = document.getElementById('topPromoBanner');
+  if (banner) {
+    banner.style.display = 'none';
+    localStorage.setItem('artlane_promo_dismissed', 'true');
+  }
+};
+
+// Check if user dismissed first
+const isPromoDismissed = localStorage.getItem('artlane_promo_dismissed') === 'true';
+const promoBanner = document.getElementById('topPromoBanner');
+if (promoBanner && !isPromoDismissed) {
+  promoBanner.style.display = 'flex';
+}
+

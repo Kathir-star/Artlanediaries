@@ -11,8 +11,9 @@
 <div class="toast" id="toast"></div>
 
 <!-- TOP ANNOUNCEMENT PROMO BANNER -->
-<div class="top-promo-banner">
-  <span>✨ RESTOCKED: Order today and unlock <strong>FREE Premium Shipping</strong> & <strong>10% Bulk Discount</strong> over 5 items! Only 3 custom slots left under review.</span>
+<div class="top-promo-banner" id="topPromoBanner" style="display: none;">
+  <span style="padding-right: 32px; font-weight: 500;">✨ RESTOCKED: Order today and unlock <strong>FREE Premium Shipping</strong> & <strong>10% Bulk Discount</strong> over 5 items! Only 3 custom slots left under review.</span>
+  <button onclick="window.closePromoBanner()" class="top-promo-close-btn" aria-label="Dismiss banner" title="Close notification">✕</button>
 </div>
 
 <!-- CART DRAWER -->
@@ -192,21 +193,21 @@
 </section>
 
 <!-- TRUST STRIP -->
-<section id="trust" style="background: #ffffff; padding: 22px 20px; border-bottom: 1.5px solid var(--beige); text-align: center;" data-aos="fade-down">
+<section id="trust" style="background: #111111; padding: 22px 20px; border-bottom: 1px solid rgba(255, 215, 0, 0.15); text-align: center;" data-aos="fade-down">
   <div class="wrap" style="max-width: 1200px; display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center; gap: 20px;">
-    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--ink);">
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: #ffffff;">
       <span style="font-size: 1.25rem;">⭐</span>
       <span>500+ Happy Customers</span>
     </div>
-    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--ink);">
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: #ffffff;">
       <span style="font-size: 1.25rem;">🚚</span>
       <span>Fast Express Delivery</span>
     </div>
-    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--ink);">
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: #ffffff;">
       <span style="font-size: 1.25rem;">🎨</span>
       <span>Handmade with Care</span>
     </div>
-    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: var(--ink);">
+    <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: #ffffff;">
       <span style="font-size: 1.25rem; color: #25d366;">💬</span>
       <span>WhatsApp Artist Support</span>
     </div>
@@ -425,7 +426,7 @@
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;" class="curated-grid">
       
       <!-- Card 1 -->
-      <div class="p-card fav-card" onclick="window.clickPremiumCard('poster')" style="cursor: pointer; background: #fff; border: 1.5px solid var(--beige); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.35s ease;">
+      <div class="p-card fav-card" onclick="window.clickCatalogProduct(1)" style="cursor: pointer; background: #fff; border: 1.5px solid var(--beige); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.35s ease;">
         <div style="position: relative; overflow: hidden; aspect-ratio: 1.1;">
           <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=400" alt="Pencil Portrait Bestseller" style="width: 100%; height: 100%; object-fit: cover;" referrerpolicy="no-referrer" />
           <span style="position: absolute; top: 12px; left: 12px; background: var(--amber); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;">🔥 Top Loved</span>
@@ -442,7 +443,7 @@
       </div>
 
       <!-- Card 2 -->
-      <div class="p-card fav-card" onclick="window.clickPremiumCard('retro')" style="cursor: pointer; background: #fff; border: 1.5px solid var(--beige); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.35s ease;">
+      <div class="p-card fav-card" onclick="window.clickCatalogProduct(7)" style="cursor: pointer; background: #fff; border: 1.5px solid var(--beige); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.35s ease;">
         <div style="position: relative; overflow: hidden; aspect-ratio: 1.1;">
           <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=400" alt="Polaroids Bestseller" style="width: 100%; height: 100%; object-fit: cover;" referrerpolicy="no-referrer" />
           <span style="position: absolute; top: 12px; left: 12px; background: var(--amber); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;">💡 Perfect Gift</span>
@@ -459,7 +460,7 @@
       </div>
 
       <!-- Card 3 -->
-      <div class="p-card fav-card" onclick="window.clickPremiumCard('split')" style="cursor: pointer; background: #fff; border: 1.5px solid var(--beige); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.35s ease;">
+      <div class="p-card fav-card" onclick="window.clickCatalogProduct(5)" style="cursor: pointer; background: #fff; border: 1.5px solid var(--beige); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; transition: all 0.35s ease;">
         <div style="position: relative; overflow: hidden; aspect-ratio: 1.1;">
           <img src="https://images.unsplash.com/photo-1544207240-8f1015480d52?auto=format&fit=crop&q=80&w=400" alt="Split Poster Bestseller" style="width: 100%; height: 100%; object-fit: cover;" referrerpolicy="no-referrer" />
           <span style="position: absolute; top: 12px; left: 12px; background: var(--amber); color: #fff; font-size: 0.65rem; font-weight: 700; padding: 4px 10px; border-radius: 20px;">🖼️ Luxury Look</span>
@@ -480,15 +481,91 @@
   </div>
 </section>
 
+<!-- PRICING SECTION -->
+<section id="pricing" style="padding: 85px 20px; text-align: center; background: #0f0f0f; border-top: 1px solid var(--beige);" data-aos="fade-up">
+  <div class="wrap" style="max-width: 1100px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 50px;">
+      <div class="sec-eye" style="justify-content: center; display: inline-flex;">Our Pricing</div>
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 2.3rem; font-weight: 700; color: #ffffff; margin: 6px 0 0 0;">Simple Transparent <em>Pricing</em></h2>
+      <p style="font-size: 0.95rem; color: var(--muted); max-width: 500px; margin: 8px auto 0;">No hidden charges. Handcrafted perfection with 100% replacement guarantee.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px;">
+      
+      <!-- Card 1: A4 Portrait -->
+      <div class="p-card" style="padding: 40px 30px; display: flex; flex-direction: column; text-align: center; justify-content: space-between; position: relative; background: rgba(22, 22, 22, 0.8); border: 1px solid rgba(255, 215, 0, 0.15); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <span style="position: absolute; top: 18px; right: 18px; font-size: 0.7rem; font-weight: 700; background: rgba(255, 215, 0, 0.15); color: #FFD700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.04em;">A4 PORTRAIT</span>
+        <div style="margin-bottom: 24px;">
+          <div style="font-size: 2rem; margin-bottom: 12px;">✏️</div>
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: #ffffff; margin: 0 0 8px 0;">A4 Portrait</h3>
+          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0 auto 16px; max-width: 220px;">Perfect bedside personal sketch portrait frame with high fidelity detail shading.</p>
+          <div style="font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: #FFD700;">₹80 <span style="font-size: 0.9rem; font-family: 'Poppins', sans-serif; font-weight: 400; color: var(--muted);">/ Sketch</span></div>
+        </div>
+        <ul style="text-align: left; font-size: 0.8rem; color: #c0c0c0; display: flex; flex-direction: column; gap: 8px; margin-bottom: 30px; list-style-type: none; padding: 0;">
+          <li style="display: flex; align-items: center; gap: 8px;">✨ <span>Single Figure Outline Shading</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">📐 <span>Dimension: A4 Size (21 x 29.7 cm)</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">🏡 <span>Double-Padded Casing Delivery</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">🎨 <span>Chennai Studio Quality Certified</span></li>
+        </ul>
+        <button onclick="window.clickCatalogProduct(1)" class="btn-w" style="width: 100%; padding: 13px; border-radius: 8px; border: none; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.3s; background: #FFD700; color: #0f0f0f;">
+          Order Now
+        </button>
+      </div>
+
+      <!-- Card 2: A3 Portrait -->
+      <div class="p-card" style="padding: 40px 30px; display: flex; flex-direction: column; text-align: center; justify-content: space-between; position: relative; background: rgba(22, 22, 22, 0.8); border: 1.5px solid #FFD700; border-radius: 12px; box-shadow: 0 10px 40px rgba(255, 215, 0, 0.12);">
+        <span style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); font-size: 0.65rem; font-weight: 700; background: #FFD700; color: #0f0f0f; padding: 4px 14px; border-radius: 20px; letter-spacing: 0.08em; text-transform: uppercase;">Most Popular Artwork</span>
+        <span style="position: absolute; top: 18px; right: 18px; font-size: 0.7rem; font-weight: 700; background: rgba(255, 215, 0, 0.15); color: #FFD700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.04em;">A3 PORTRAIT</span>
+        <div style="margin-bottom: 24px;">
+          <div style="font-size: 2rem; margin-bottom: 12px;">🎨</div>
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: #ffffff; margin: 0 0 8px 0;">A3 Portrait</h3>
+          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0 auto 16px; max-width: 220px;">Magnificent gallery frame for living room feature walls, birthdays & couple gifts.</p>
+          <div style="font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: #FFD700;">₹150 <span style="font-size: 0.9rem; font-family: 'Poppins', sans-serif; font-weight: 400; color: var(--muted);">/ Portrait</span></div>
+        </div>
+        <ul style="text-align: left; font-size: 0.8rem; color: #c0c0c0; display: flex; flex-direction: column; gap: 8px; margin-bottom: 30px; list-style-type: none; padding: 0;">
+          <li style="display: flex; align-items: center; gap: 8px;">✨ <span>Full Grayscale Shading (Dual Figures)</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">📐 <span>Dimension: A3 Size (29.7 x 42 cm)</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">🏡 <span>Double-Padded Casing Delivery</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">💬 <span>Unlimited Digital Revisions Drafts</span></li>
+        </ul>
+        <button onclick="window.clickCatalogProduct(2)" class="btn-w" style="width: 100%; padding: 13px; border-radius: 8px; border: none; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.3s; background: #FFD700; color: #0f0f0f;">
+          Order Now
+        </button>
+      </div>
+
+      <!-- Card 3: Custom Gifts -->
+      <div class="p-card" style="padding: 40px 30px; display: flex; flex-direction: column; text-align: center; justify-content: space-between; position: relative; background: rgba(22, 22, 22, 0.8); border: 1px solid rgba(255, 215, 0, 0.15); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <span style="position: absolute; top: 18px; right: 18px; font-size: 0.7rem; font-weight: 700; background: rgba(255, 215, 0, 0.15); color: #FFD700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.04em;">MEMORIES GIFT</span>
+        <div style="margin-bottom: 24px;">
+          <div style="font-size: 2rem; margin-bottom: 12px;">🎁</div>
+          <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: #ffffff; margin: 0 0 8px 0;">Custom Gifts</h3>
+          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0 auto 16px; max-width: 220px;">Aesthetic mugs, personalized keychains, collages & mini frames series.</p>
+          <div style="font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: #FFD700;"><span style="font-size: 0.9rem; font-family: 'Poppins', sans-serif; font-weight: 500; color: var(--muted); display:inline-block; margin-right:4px;">From</span>₹299</div>
+        </div>
+        <ul style="text-align: left; font-size: 0.8rem; color: #c0c0c0; display: flex; flex-direction: column; gap: 8px; margin-bottom: 30px; list-style-type: none; padding: 0;">
+          <li style="display: flex; align-items: center; gap: 8px;">✨ <span>High Quality Thermal Sublimation Setup</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">📐 <span>Bespoke Personalized Packaging</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">🏡 <span>Fast Track Express Shipping Included</span></li>
+          <li style="display: flex; align-items: center; gap: 8px;">🎨 <span>100% Ceramic / Non-fade Inks</span></li>
+        </ul>
+        <button onclick="window.clickCatalogProduct(10)" class="btn-w" style="width: 100%; padding: 13px; border-radius: 8px; border: none; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.3s; background: #FFD700; color: #0f0f0f;">
+          Order Now
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 </div><!-- End page1-segment -->
 
 <!-- INTERACTIVE DEDICATED PREVIEW CUSTOMZER STUDIO VIEW -->
 <div id="page2_preview" style="display: none; opacity: 0; transition: opacity 0.35s ease-in-out;">
-<section id="premiumCustomizerSection" style="padding: 70px 20px; background: #ffffff; border-top:1px solid var(--beige);">
+<section id="premiumCustomizerSection" style="padding: 70px 20px; background: #0f0f0f; border-top:1px solid rgba(255, 215, 0, 0.15);">
   <div class="wrap" style="max-width: 1200px; margin:0 auto;">
     
     <!-- SUBTLE FLOATING ALERT TRIGGER OR NOTIFICATION FOR PREMIUM DESIGNS (CONVERSION BOOSTERS) -->
-    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; background:#faf8f5; border:1px solid var(--beige); padding:10px 16px; border-radius:10px; margin-bottom:30px; gap:10px;">
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; background:#161616; border:1px solid rgba(255, 215, 0, 0.15); padding:10px 16px; border-radius:10px; margin-bottom:30px; gap:10px;">
       <div style="display:flex; align-items:center; gap:8px;">
         <span style="animation: bounce 1.8s infinite; display:inline-block; font-size:1rem;">🔥</span>
         <span style="font-size:0.78rem; font-weight:700; color:var(--ink);">Only 5 designer verification slots left today!</span>
@@ -717,18 +794,18 @@
 </section>
 
 <!-- ORDER FROM INSTAGRAM CTA & TIMELINE -->
-<section id="funnel-extras" style="background: #faf8f5; border-top: 1px solid var(--beige); border-bottom: 1px solid var(--beige); padding: 80px 20px;">
+<section id="funnel-extras" style="background: #0f0f0f; border-top: 1px solid rgba(255, 215, 0, 0.15); border-bottom: 1px solid rgba(255, 215, 0, 0.15); padding: 80px 20px;">
   <div class="wrap" style="max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 60px;">
     
     <!-- Instagram CTA Banner -->
-    <div style="background: linear-gradient(135deg, #fff5f6, #fffbf7); border: 1.5px solid rgba(225,48,108,0.12); border-radius: var(--r); padding: 40px; display: flex; align-items: center; justify-content: space-between; gap: 30px; box-shadow: var(--shadow-sm); flex-wrap: wrap;" data-aos="fade-up">
+    <div style="background: rgba(22, 22, 22, 0.8); border: 1.5px solid rgba(225,48,108,0.3); border-radius: var(--r); padding: 40px; display: flex; align-items: center; justify-content: space-between; gap: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-wrap: wrap;" data-aos="fade-up">
       <div style="flex: 1; min-width: 280px;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
           <span style="font-size: 1.8rem;">📸</span>
-          <span style="font-family:'DM Sans',sans-serif; text-transform:uppercase; font-size:0.7rem; font-weight:700; color:#e1306c; letter-spacing:0.12em;">Instagram Seamless Funnel</span>
+          <span style="font-family:'DM Sans',sans-serif; text-transform:uppercase; font-size:0.7rem; font-weight:700; color:#ff4f8b; letter-spacing:0.12em;">Instagram Seamless Funnel</span>
         </div>
-        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: var(--ink); margin: 0 0 10px 0;">Prefer to Order Directly on Instagram?</h3>
-        <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.6; margin: 0;">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">Prefer to Order Directly on Instagram?</h3>
+        <p style="font-size: 0.88rem; color: #dddddd; line-height: 1.6; margin: 0;">
           No problem! You can send us your reference photographs directly on Instagram GM. Our artist support team coordinates all image cropping, custom greeting text modifications, and registers your payment instantly!
         </p>
       </div>
@@ -736,7 +813,7 @@
         <a href="https://www.instagram.com/direct/t/17847258885599020/" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #e1306c; color: #fff; text-decoration: none; padding: 13px 28px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; transition: all 0.25s; box-shadow: 0 4px 15px rgba(225,48,108,0.25); white-space: nowrap;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(225,48,108,0.45)'" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(225,48,108,0.25)'">
           💬 Chat & Order on Instagram
         </a>
-        <a href="https://www.instagram.com/artlane_diaries" target="_blank" style="font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-left: 14px; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='#e1306c'" onmouseout="this.style.color='var(--muted)'">View Our Feed @artlane_diaries</a>
+        <a href="https://www.instagram.com/artlane_diaries" target="_blank" style="font-size: 0.8rem; font-weight: 700; color: #b3b3b3; margin-left: 14px; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='#ff4f8b'" onmouseout="this.style.color='#b3b3b3'">View Our Feed @artlane_diaries</a>
       </div>
     </div>
 
@@ -744,38 +821,38 @@
     <div data-aos="fade-up">
       <div style="text-align: center; margin-bottom: 40px;">
         <div class="sec-eye" style="justify-content: center;">Order Journey</div>
-        <h3 style="font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--ink); margin: 6px 0 0 0;">Our Transparent <em>Delivery Timeline</em></h3>
-        <p style="font-size: 0.88rem; color: var(--muted); max-width: 550px; margin: 8px auto 0; line-height: 1.7;">From your favorite photos to masterclass art delivered safely with zero guesswork. Here is exactly what happens next:</p>
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #ffffff; margin: 6px 0 0 0;">Our Transparent <em>Delivery Timeline</em></h3>
+        <p style="font-size: 0.88rem; color: #b3b3b3; max-width: 550px; margin: 8px auto 0; line-height: 1.7;">From your favorite photos to masterclass art delivered safely with zero guesswork. Here is exactly what happens next:</p>
       </div>
 
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; position: relative;">
         <!-- Card 1 -->
-        <div style="background: #fff; border: 1.5px solid var(--beige); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: var(--shadow-sm);">
-          <div style="width: 32px; height: 32px; background: var(--warm); color: var(--ink); font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">1</div>
-          <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);">Day 0: Checkout</div>
-          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0;">Upload your files, pick sizes, and submit checkout details. Redirects to WhatsApp instantly to confirm specs.</p>
-          <span style="font-size: 0.72rem; font-weight: 700; color: var(--print); background: rgba(110,148,112,0.1); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">Auto-initiated</span>
+        <div style="background: rgba(22, 22, 22, 0.8); border: 1.5px solid rgba(255, 215, 0, 0.15); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+          <div style="width: 32px; height: 32px; background: #FFD700; color: #0f0f0f; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">1</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: #ffffff;">Day 0: Checkout</div>
+          <p style="font-size: 0.8rem; color: #cccccc; line-height: 1.6; margin: 0;">Upload your files, pick sizes, and submit checkout details. Redirects to WhatsApp instantly to confirm specs.</p>
+          <span style="font-size: 0.72rem; font-weight: 700; color: #FFD700; background: rgba(255, 215, 0, 0.1); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">Auto-initiated</span>
         </div>
         <!-- Card 2 -->
-        <div style="background: #fff; border: 1.5px solid var(--beige); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: var(--shadow-sm);">
-          <div style="width: 32px; height: 32px; background: var(--amber); color: #fff; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">2</div>
-          <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);">Day 1: Photo Review</div>
-          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0;">Our studio reviews selected references, adjusts composition borders, and confirms background request parameters.</p>
-          <span style="font-size: 0.72rem; font-weight: 700; color: #e67e22; background: rgba(230,126,34,0.1); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">Consultation chat</span>
+        <div style="background: rgba(22, 22, 22, 0.8); border: 1.5px solid rgba(255, 215, 0, 0.15); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+          <div style="width: 32px; height: 32px; background: #FFD700; color: #0f0f0f; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">2</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: #ffffff;">Day 1: Photo Review</div>
+          <p style="font-size: 0.8rem; color: #cccccc; line-height: 1.6; margin: 0;">Our studio reviews selected references, adjusts composition borders, and confirms background request parameters.</p>
+          <span style="font-size: 0.72rem; font-weight: 700; color: #e67e22; background: rgba(230,126,34,0.15); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">Consultation chat</span>
         </div>
         <!-- Card 3 -->
-        <div style="background: #fff; border: 1.5px solid var(--beige); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: var(--shadow-sm);">
-          <div style="width: 32px; height: 32px; background: var(--print); color: #fff; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">3</div>
-          <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);">Day 2-3: Work draft</div>
-          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0;">Our artists meticulous draw outlines or apply aesthetic filter setups, and send a digital preview draft on WhatsApp for approval.</p>
-          <span style="font-size: 0.72rem; font-weight: 700; color: var(--print); background: rgba(110,148,112,0.1); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">100% Free Edits</span>
+        <div style="background: rgba(22, 22, 22, 0.8); border: 1.5px solid rgba(255, 215, 0, 0.15); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+          <div style="width: 32px; height: 32px; background: #FFD700; color: #0f0f0f; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">3</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: #ffffff;">Day 2-3: Work draft</div>
+          <p style="font-size: 0.8rem; color: #cccccc; line-height: 1.6; margin: 0;">Our artists meticulous draw outlines or apply aesthetic filter setups, and send a digital preview draft on WhatsApp for approval.</p>
+          <span style="font-size: 0.72rem; font-weight: 700; color: #FFD700; background: rgba(255, 215, 0, 0.1); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">100% Free Edits</span>
         </div>
         <!-- Card 4 -->
-        <div style="background: #fff; border: 1.5px solid var(--beige); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: var(--shadow-sm);">
-          <div style="width: 32px; height: 32px; background: var(--ink); color: #fff; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">4</div>
-          <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink);">Day 4-5: Casing Delivery</div>
-          <p style="font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin: 0;">Artwork is bound in double-padded premium transit frames, safely dispatched and delivered right to your home.</p>
-          <span style="font-size: 0.72rem; font-weight: 700; color: #9b59b6; background: rgba(155,89,182,0.1); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">Free Express Delivery</span>
+        <div style="background: rgba(22, 22, 22, 0.8); border: 1.5px solid rgba(255, 215, 0, 0.15); padding: 24px; border-radius: var(--r); display: flex; flex-direction: column; gap: 12px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+          <div style="width: 32px; height: 32px; background: #FFD700; color: #0f0f0f; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem;">4</div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: #ffffff;">Day 4-5: Casing Delivery</div>
+          <p style="font-size: 0.8rem; color: #cccccc; line-height: 1.6; margin: 0;">Artwork is bound in double-padded premium transit frames, safely dispatched and delivered right to your home.</p>
+          <span style="font-size: 0.72rem; font-weight: 700; color: #9b59b6; background: rgba(155,89,182,0.15); padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: auto;">Free Express Delivery</span>
         </div>
       </div>
     </div>
@@ -1075,11 +1152,6 @@
             <td style="padding:10px 4px; color:var(--amber); font-weight:500;">29.7 × 42.0 cm</td>
             <td style="padding:10px 4px; color:var(--muted);">Living room feature focus, gallery frames</td>
           </tr>
-          <tr style="border-bottom:1px solid var(--beige);">
-            <td style="padding:10px 4px; font-weight:700; color:var(--ink);">13 × 19 Sizing</td>
-            <td style="padding:10px 4px; color:var(--amber); font-weight:500;">33.0 × 48.3 cm</td>
-            <td style="padding:10px 4px; color:var(--muted);">Cinema rooms, main master bedroom walls</td>
-          </tr>
         </tbody>
       </table>
     </div>
@@ -1091,6 +1163,77 @@
     <button onclick="window.toggleSizeGuideModal(false)" style="background:var(--ink); color:#fff; font-size:0.75rem; font-weight:700; border:none; width:100%; border-radius:6px; padding:12px; margin-top:14px; cursor:pointer;">
       Perfect, Keep Sizing
     </button>
+  </div>
+</div>
+
+<!-- IMAGE CROPPER MODAL OVERLAY -->
+<div id="imageCropModal" class="p-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:20000; align-items:center; justify-content:center; padding:20px;" onclick="window.closeCropModal()">
+  <div class="p-modal-card" style="background:#fff; border-radius:12px; width:100%; max-width:480px; box-shadow:0 25px 60px rgba(0,0,0,0.2); border:1px solid var(--beige); padding:24px; position:relative; display:flex; flex-direction:column; gap:16px;" onclick="event.stopPropagation()">
+    <button onclick="window.closeCropModal()" style="position:absolute; top:12px; right:12px; background:none; border:none; font-size:1.15rem; font-weight:700; color:var(--muted); cursor:pointer; padding:4px;" title="Close crop tool">✕</button>
+    
+    <div style="text-align:center;">
+      <h3 style="font-family:'Playfair Display', serif; font-size:1.35rem; color:var(--ink); margin:0 0 4px 0;">✂️ Adjust <em>Focus & Crop</em></h3>
+      <p style="font-size:0.75rem; color:var(--muted); margin:0;">Drag image on the canvas to center. Use sliders to zoom, shift, or rotate.</p>
+    </div>
+
+    <!-- Interactive Canvas Area -->
+    <div style="width:100%; display:flex; justify-content:center; background:#faf8f5; padding:10px; border-radius:8px; border:1px solid var(--beige); overflow:hidden; position:relative;">
+      <canvas id="cropCanvas" style="max-width:100%; width:420px; height:300px; display:block; cursor:move; background:#f5efe6; border-radius:4px; touch-action:none;" width="420" height="300"></canvas>
+    </div>
+
+    <!-- Aspect Ratio Selector -->
+    <div style="display:flex; flex-direction:column; gap:4px;">
+      <label style="font-size:0.68rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:2px;">Select Crop Format</label>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <button id="cropRatio1" onclick="window.setCropRatio(1.0, this)" style="flex:1; font-size:0.72rem; padding:6px 10px; border-radius:6px; border:1px solid var(--beige); background:#fff; color:var(--ink); cursor:pointer; font-weight:600; text-align:center; transition:all 0.2s;" title="Square crop (1:1)">1:1 Square</button>
+        <button id="cropRatio2" onclick="window.setCropRatio(0.707, this)" style="flex:1; font-size:0.72rem; padding:6px 10px; border-radius:6px; border:1px solid var(--beige); background:#fff; color:var(--ink); cursor:pointer; font-weight:600; text-align:center; transition:all 0.2s;" title="Portrait A4 shape (1:1.41)">A-Series (A4/A3)</button>
+        <button id="cropRatio3" onclick="window.setCropRatio(0.667, this)" style="flex:1; font-size:0.72rem; padding:6px 10px; border-radius:6px; border:1px solid var(--beige); background:#fff; color:var(--ink); cursor:pointer; font-weight:600; text-align:center; transition:all 0.2s;" title="Classic Portrait crop (2:3)">2:3 Portrait</button>
+        <button id="cropRatio4" onclick="window.setCropRatio(0, this)" style="flex:1; font-size:0.72rem; padding:6px 10px; border-radius:6px; border:1px solid var(--beige); background:#fff; color:var(--ink); cursor:pointer; font-weight:600; text-align:center; transition:all 0.2s;" title="Unrestricted freeform alignment">Free form</button>
+      </div>
+    </div>
+
+    <!-- Adjustments Sliders Section -->
+    <div style="display:flex; flex-direction:column; gap:10px; background:rgba(184,132,74,0.02); padding:12px; border-radius:8px; border:1px solid var(--beige);">
+      
+      <!-- Zoom/Scale Slider -->
+      <div style="display:flex; align-items:center; gap:10px; width:100%;">
+        <span style="font-size:0.72rem; font-weight:700; color:var(--ink); width:55px; min-width:55px; display:flex; align-items:center; gap:4px;">🔍 Zoom:</span>
+        <input type="range" id="cropZoom" min="0.1" max="4.0" step="0.05" value="1.0" style="flex:1; accent-color:var(--amber); cursor:pointer;" oninput="window.onCropZoomChange(this.value)" />
+        <span id="cropZoomVal" style="font-size:0.72rem; width:45px; font-weight:600; font-family:monospace; text-align:right;">1.00x</span>
+      </div>
+
+      <!-- Rotation control -->
+      <div style="display:flex; align-items:center; justify-content:space-between; width:100%; padding-top:4px; border-top:1px dashed var(--beige);">
+        <span style="font-size:0.72rem; font-weight:700; color:var(--ink);">Alignment:</span>
+        <button onclick="window.rotateCropImage()" style="background:#fff; border:1px solid var(--beige); border-radius:6px; padding:5px 12px; font-size:0.7rem; font-weight:700; color:var(--ink); cursor:pointer; display:flex; align-items:center; gap:4px; transition:all 0.2s;" onmouseover="this.style.background='var(--beige)'" onmouseout="this.style.background='#fff'">
+          🔄 Rotate 90° Clockwise
+        </button>
+      </div>
+
+      <!-- Nudge Controls coordinate sliders -->
+      <div style="display:flex; gap:12px; width:100%; padding-top:4px; border-top:1px dashed var(--beige);">
+        <div style="display:flex; align-items:center; gap:6px; flex:1;">
+          <span style="font-size:0.65rem; font-weight:700; color:var(--muted); min-width:35px;">Nudge X:</span>
+          <input type="range" id="cropShiftX" min="-300" max="300" value="0" style="flex:1; accent-color:var(--amber); cursor:pointer;" oninput="window.onCropShiftChange('x', this.value)" />
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; flex:1;">
+          <span style="font-size:0.65rem; font-weight:700; color:var(--muted); min-width:35px;">Nudge Y:</span>
+          <input type="range" id="cropShiftY" min="-300" max="300" value="0" style="flex:1; accent-color:var(--amber); cursor:pointer;" oninput="window.onCropShiftChange('y', this.value)" />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Actions Buttons -->
+    <div style="display:flex; gap:12px; margin-top:4px;">
+      <button onclick="window.closeCropModal()" style="flex:1; border:1px solid var(--beige); background:#fff; color:var(--muted); padding:12px; border-radius:6px; font-size:0.78rem; font-weight:700; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='#fdfcfb'" onmouseout="this.style.background='#fff'">
+        Cancel
+      </button>
+      <button onclick="window.applyAndSaveCrop()" style="flex:1.5; border:none; background:var(--amber); color:#fff; padding:12px; border-radius:6px; font-size:0.78rem; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(184,132,74,0.15); transition:all 0.2s;" onmouseover="this.style.background='var(--ink)'" onmouseout="this.style.background='var(--amber)'">
+        💾 Save focus & Crop
+      </button>
+    </div>
+
   </div>
 </div>
 

@@ -1,9 +1,26 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-:root{--ink:#18140f;--white:#faf8f5;--beige:#ede6da;--warm:#c4a882;--amber:#b8844a;--blush:#e4c4b4;--sage:#8fa48c;--print:#6e9470;--muted:#8a7d6e;--card:#ffffff;--r:12px;--rs:8px;--s1:0 2px 12px rgba(0,0,0,0.06);--s2:0 8px 32px rgba(0,0,0,0.10);--s3:0 20px 60px rgba(0,0,0,0.14)}
+:root{
+  --ink:#ffffff;
+  --white:#0f0f0f;
+  --beige:#2d2922;
+  --warm:#d4af37;
+  --amber:#FFD700;
+  --blush:#151412;
+  --sage:#d4af37;
+  --print:#FFD700;
+  --muted:#b3b3b3;
+  --card:#161616;
+  --r:12px;
+  --rs:8px;
+  --s1:0 4px 20px rgba(0,0,0,0.5);
+  --s2:0 10px 40px rgba(255, 215, 0, 0.08);
+  --s3:0 20px 60px rgba(255, 215, 0, 0.12);
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);overflow-x:hidden}
+body{font-family:'Poppins', 'DM Sans', sans-serif;background:var(--white);color:var(--ink);overflow-x:hidden}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--beige)}::-webkit-scrollbar-thumb{background:var(--warm);border-radius:10px}
 
 /* TOAST */
@@ -66,7 +83,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);o
 .cart-footer[data-empty="true"]{display:none}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:66px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(250,248,245,0.93);backdrop-filter:blur(20px);border-bottom:1px solid rgba(196,168,130,0.18);transition:all 0.3s}
+nav{position:sticky;top:0;left:0;right:0;z-index:1000;height:66px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(250,248,245,0.93);backdrop-filter:blur(20px);border-bottom:1px solid rgba(196,168,130,0.18);transition:all 0.3s}
 nav.scrolled{box-shadow:0 4px 24px rgba(0,0,0,0.07)}
 .nav-logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--ink);text-decoration:none}
 .nav-logo span{color:var(--amber)}
@@ -89,7 +106,7 @@ nav.scrolled{box-shadow:0 4px 24px rgba(0,0,0,0.07)}
 /* HERO */
 #hero {
   min-height: 90vh;
-  background: var(--ink);
+  background: var(--white);
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
@@ -204,15 +221,15 @@ h1.hero-title em{font-style:italic;color:var(--warm)}
   position: absolute;
   top: 40px;
   left: -20px;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(22, 22, 22, 0.9);
   backdrop-filter: blur(12px);
-  border: 1px solid var(--beige);
+  border: 1px solid rgba(255, 215, 0, 0.25);
   padding: 12px 18px;
   border-radius: var(--r);
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
   z-index: 10;
   max-width: 240px;
   text-align: left;
@@ -508,8 +525,7 @@ footer{background:var(--ink);padding:56px 40px 26px}
   letter-spacing: 0.03em;
   padding: 8px 16px;
   text-align: center;
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 2000;
   display: flex;
   justify-content: center;
@@ -517,9 +533,34 @@ footer{background:var(--ink);padding:56px 40px 26px}
   animation: slideDown 0.4s ease both;
   border-bottom: 1.5px solid var(--amber);
 }
+.top-promo-close-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.7;
+  transition: all 0.25s ease;
+  padding: 4px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border-radius: 4px;
+}
+.top-promo-close-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFD700 !important;
+}
 @keyframes slideDown {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(0); }
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 /* WIZARD STEPS */
@@ -1476,5 +1517,435 @@ footer{background:var(--ink);padding:56px 40px 26px}
   border-color: var(--amber) !important;
   box-shadow: 0 20px 40px rgba(184,132,74,0.14) !important;
 }
+
+/* ART LANE DIARIES - DARK LUXURY OVERRIDES */
+body {
+  background-color: #0f0f0f !important;
+  color: #ffffff !important;
+}
+
+/* Base Headings & Text Overrides */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif !important;
+  color: #ffffff !important;
+}
+
+/* Accent Highlight */
+em, .highlight {
+  color: #FFD700 !important;
+  font-style: italic !important;
+}
+
+/* Sections Backgrounds */
+#shop, #custom, #how, #curated-favorites, #funnel-extras, #faq, #testimonials, #contact, #about, #artist-brand-profile, .page1-segment, #start-creating, .about-profile-pic, .about-float {
+  background-color: #0f0f0f !important;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(212, 175, 55, 0.03) 0%, transparent 45%) !important;
+  border-color: #25221e !important;
+  color: #ffffff !important;
+}
+
+/* Glassmorphism Cards with Elegant Gold Hover */
+.p-card, .c-panel, .t-card, .form-box, .p-modal-card, .fav-card, .faq-item, .policy-modal-card, .design-your-own-card, .order-confirm-box, #premiumSummaryBox, .dyo-info, .policy-modal-card {
+  background: rgba(22, 22, 22, 0.8) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 215, 0, 0.15) !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.p-card:hover, .fav-card:hover, .design-your-own-card:hover, .t-card:hover {
+  transform: translateY(-6px) !important;
+  border-color: #FFD700 !important;
+  box-shadow: 0 15px 40px rgba(255, 215, 0, 0.15) !important;
+}
+
+/* Navigation Overrides */
+nav {
+  background: rgba(15, 15, 15, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.15) !important;
+}
+
+nav .nav-logo, nav .nav-logo span {
+  color: #ffffff !important;
+}
+
+nav .nav-logo span {
+  color: #FFD700 !important;
+}
+
+nav .nav-links a {
+  color: #dddddd !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
+nav .nav-links a:hover {
+  color: #FFD700 !important;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.4) !important;
+}
+
+nav.scrolled {
+  background: rgba(10, 10, 10, 0.95) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Quick Order WhatsApp Input Adjustments */
+.checkout-input, input[type="text"], input[type="email"], input[type="tel"], textarea, select {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+}
+
+.checkout-input:focus, input:focus, textarea:focus {
+  border-color: #FFD700 !important;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2) !important;
+  outline: none !important;
+}
+
+/* Category Filter Tabs */
+.f-tab {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1.5px solid rgba(255, 215, 0, 0.2) !important;
+  color: #b3b3b3 !important;
+  transition: all 0.25s !important;
+}
+
+.f-tab:hover {
+  border-color: #FFD700 !important;
+  color: #FFD700 !important;
+}
+
+.f-tab.on {
+  background: #FFD700 !important;
+  border-color: #FFD700 !important;
+  color: #0f0f0f !important;
+}
+
+/* Drawer Cart and Overlays */
+.cart-drawer {
+  background: #0f0f0f !important;
+  border-left: 1px solid rgba(255, 215, 0, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.cart-head, .cart-footer, .cart-item, .drawer-steps-bar {
+  border-color: rgba(255, 215, 0, 0.1) !important;
+}
+
+#savedSection {
+  background: #151412 !important;
+  border-top-color: rgba(255, 215, 0, 0.15) !important;
+}
+
+/* Buttons style overrides */
+.btn-w {
+  background: #FFD700 !important;
+  color: #0f0f0f !important;
+  font-weight: 700 !important;
+}
+
+.btn-w:hover {
+  background: #ffffff !important;
+  color: #0f0f0f !important;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4) !important;
+}
+
+.btn-g {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.btn-g:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: #FFD700 !important;
+}
+
+/* Scroll status indicator and buttons */
+.stb {
+  background: #FFD700 !important;
+  color: #0f0f0f !important;
+  border: 1px solid #FFD700 !important;
+}
+
+.stb:hover {
+  background: #ffffff !important;
+  color: #0f0f0f !important;
+}
+
+/* Sticky Bottom Bar and Cart Items Badge */
+.cart-nav-btn {
+  background: #FFD700 !important;
+  color: #0f0f0f !important;
+}
+.cart-nav-btn:hover {
+  background: #ffffff !important;
+}
+.cart-nav-count {
+  background: #0f0f0f !important;
+  color: #FFD700 !important;
+}
+
+/* General Custom Lists Sub Text */
+.uz-sub, .p-cat, .dyo-meta, .sec-eye, .as-l, .hstat-l {
+  color: #FFD700 !important;
+  font-weight: 500 !important;
+}
+
+/* Footer Section Overrides */
+footer {
+  background: #070707 !important;
+  border-top: 1px solid rgba(255, 215, 0, 0.15) !important;
+}
+footer .f-logo, footer .f-logo span {
+  color: #ffffff !important;
+}
+footer .f-logo span {
+  color: #FFD700 !important;
+}
+footer a {
+  color: #b3b3b3 !important;
+}
+footer a:hover {
+  color: #FFD700 !important;
+}
+
+/* Testimonial Star highlights */
+.t-stars {
+  color: #FFD700 !important;
+}
+
+/* Crop Modal Overrides */
+#imageCropModal .p-modal-card {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border: 1px solid #FFD700 !important;
+}
+
+#cropRatio1, #cropRatio2, #cropRatio3, #cropRatio4 {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  color: #ffffff !important;
+}
+
+#cropRatio1:hover, #cropRatio2:hover, #cropRatio3:hover, #cropRatio4:hover {
+  border-color: #FFD700 !important;
+}
+
+#cropRatio1.sa, #cropRatio2.sa, #cropRatio3.sa, #cropRatio4.sa {
+  background: #FFD700 !important;
+  color: #0f0f0f !important;
+}
+
+/* General button states for customizer actions */
+.customizer-action-btn.primary {
+  background: #FFD700 !important;
+  color: #0f0f0f !important;
+  font-weight: 700 !important;
+}
+.customizer-action-btn.secondary {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 215, 0, 0.3) !important;
+  color: #ffffff !important;
+}
+.customizer-action-btn.primary:hover {
+  background: #ffffff !important;
+  box-shadow: 0 0 20px rgba(255,215,0,0.3) !important;
+}
+.customizer-action-btn.secondary:hover {
+  border-color: #FFD700 !important;
+  color: #FFD700 !important;
+}
+
+/* Dark Luxury Palette Overrides for Hardcoded Light Sections */
+#shop, #how, #curated-favorites, #premiumCustomizerSection, #vthumb_poster, #vthumb_split, #vthumb_split2x2, #vthumb_retro, #vthumb_mini, #vthumb_photobooth {
+  background: #0f0f0f !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 215, 0, 0.15) !important;
+}
+
+#how div[style*="background: #fff"], 
+#how div[style*="background:#fff"],
+#how div[style*="background: white"],
+#premiumCustomizerSection div[style*="background:#faf8f5"],
+#premiumCustomizerSection div[style*="background: #faf8f5"],
+.premium-calculated-box,
+.realistic-framer-wrapper,
+.compact-pay-box,
+.compact-sum-box,
+.checkout-section,
+.compact-order-summary {
+  background: #151412 !important;
+  border-color: rgba(255, 215, 0, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* Ensure form input fields look outstanding on dark background */
+.checkout-input, #quickWAModal input, #quickWAModal textarea {
+  background: #1a1a1a !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.checkout-input::placeholder, #quickWAModal input::placeholder, #quickWAModal textarea::placeholder {
+  color: #888888 !important;
+}
+
+/* Clear Saved banner override */
+#savedSection {
+  background: #111111 !important;
+  border-top: 2px dashed rgba(255, 215, 0, 0.2) !important;
+}
+
+/* Hero elements contrast and readability overrides */
+.hero-eyebrow {
+  background: rgba(255, 215, 0, 0.08) !important;
+  color: #FFD700 !important;
+  border: 1px solid rgba(255, 215, 0, 0.25) !important;
+}
+
+.hero-sub {
+  color: #dddddd !important;
+}
+
+.badge-title {
+  color: #ffffff !important;
+}
+
+.badge-sub {
+  color: #aaaaaa !important;
+}
+
+.badge-icon {
+  background: rgba(255, 215, 0, 0.15) !important;
+}
+
+/* Contact section elements visibility and premium style overrides */
+.c-link {
+  background: rgba(22, 22, 22, 0.8) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 215, 0, 0.15) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.c-link:hover {
+  border-color: #FFD700 !important;
+  color: #FFD700 !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.25) !important;
+  transform: translateX(6px) !important;
+}
+
+.c-link-icon {
+  background: rgba(255, 215, 0, 0.12) !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 4px !important;
+}
+
+.form-sub {
+  background: #FFD700 !important;
+  color: #0f0f0f !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.form-sub:hover {
+  background: #ffffff !important;
+  color: #0f0f0f !important;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+.fr input, .fr textarea {
+  border-color: rgba(255, 215, 0, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.fr input:focus, .fr textarea:focus {
+  border-color: #FFD700 !important;
+}
+
+/* Modals and overlay elements contrast and premium style overrides */
+#quickWAModal > div,
+#premiumSizeGuideModal .p-modal-card,
+#imageCropModal .p-modal-card {
+  background: #111111 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 215, 0, 0.2) !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7) !important;
+}
+
+#quickWAModal h3, 
+#quickWAItemBadge div,
+#quickWATitle,
+#premiumSizeGuideModal h3,
+#premiumSizeGuideModal th,
+#premiumSizeGuideModal td,
+#imageCropModal h3 {
+  color: #ffffff !important;
+}
+
+#quickWAItemBadge {
+  background: #161616 !important;
+  border-color: rgba(255, 215, 0, 0.15) !important;
+}
+
+#quickWAModal label,
+#quickWAModal p,
+#premiumSizeGuideModal p,
+#imageCropModal p {
+  color: #dddddd !important;
+}
+
+#quickWAModal div[style*="border-bottom"],
+#quickWAModal div[style*="background: #faf8f5"],
+#premiumSizeGuideModal div[style*="background:#faf8f5"],
+#imageCropModal div[style*="background:#faf8f5"],
+#imageCropModal div[style*="background: #faf8f5"] {
+  background: #161616 !important;
+  border-color: rgba(255, 215, 0, 0.15) !important;
+}
+
+#premiumSizeGuideModal tr {
+  border-bottom-color: rgba(255, 215, 0, 0.1) !important;
+}
+
+#premiumSizeGuideModal td[style*="color:var(--muted)"],
+#premiumSizeGuideModal th[style*="color:var(--muted)"] {
+  color: #cccccc !important;
+}
+
+#premiumSizeGuideModal button[style*="background:var(--ink)"] {
+  background: #FFD700 !important;
+  color: #0f0f0f !important;
+  font-weight: 700 !important;
+  transition: all 0.3s ease !important;
+}
+
+#premiumSizeGuideModal button[style*="background:var(--ink)"]:hover {
+  background: #ffffff !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4) !important;
+}
+
+/* Ensure the background placeholder inside the shop is dark */
+#shop div[style*="background: #faf8f5"],
+#shop div[style*="background:#faf8f5"] {
+  background: #161616 !important;
+}
+
+
 
 
